@@ -27,6 +27,67 @@ st.markdown("""
 
 @media (max-width: 600px) {
 
+    /* ===== Đưa label Korean / Vietnamese sát box ===== */
+    div[data-testid="column"] > div:nth-child(1) {
+        margin-bottom: 4px !important;
+    }
+
+    /* chính xác target label */
+    div[data-testid="column"] > div > div > div {
+        margin-bottom: 6px !important;
+        margin-top: 2px !important;
+    }
+
+    /* ===== ĐẶT SWAP VÀO CHÍNH GIỮA ===== */
+
+    /* khối chứa cột giữa */
+    div[data-testid="column"]:nth-child(2) {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* container swap */
+    .swap-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+
+    /* nút swap */
+    .swap-container button {
+        font-size: 28px !important;
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 auto !important;
+    }
+
+    /* ===== giảm khoảng trắng extra giữa các phần tử ===== */
+    .block-container {
+        gap: 4px !important;
+    }
+
+    div[data-testid="stVerticalBlock"]{
+        gap: 6px !important;
+        margin-top: 2px !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+@media (max-width: 600px) {
+
     /* Kéo toàn bộ content lên trên */
     .main > div:first-child {
         padding-top: 0px !important;
