@@ -21,6 +21,71 @@ st.set_page_config(
 )
 
 # 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
+# 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
+st.markdown("""
+<style>
+@media (max-width: 600px) {
+    /* giữ 2 cột song song nếu có thể */
+    div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
+    }
+    div[data-testid="column"] {
+        display: inline-block !important;
+        width: 49% !important;
+        vertical-align: top;
+    }
+
+    /* thu gọn padding của container chính */
+    .block-container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-top: 8px !important;
+        padding-bottom: 20px !important;
+    }
+
+    /* header gọn hơn một chút */
+    h2 {
+        margin-top: 4px !important;
+        margin-bottom: 10px !important;
+        font-size: 24px !important;
+    }
+
+    /* label Vietnamese / Korean */
+    div[style*="font-size:25px; font-weight:600;"] {
+        font-size: 20px !important;
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* textarea thấp hơn để đỡ chiếm chiều cao màn hình */
+    textarea {
+        height: 150px !important;
+        font-size: 16px !important;
+    }
+
+    /* thu gọn khoảng cách vùng swap */
+    .swap-container {
+        height: 32px !important;
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* nút bấm nhỏ gọn hơn */
+    .stButton > button {
+        padding: 6px 12px !important;
+        font-size: 14px !important;
+    }
+
+    /* history box gọn lại */
+    .history-box {
+        margin-bottom: 4px !important;
+        padding: 6px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
 st.markdown("""
 <style>
 @media (max-width: 600px) {
