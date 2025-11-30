@@ -325,54 +325,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("""
-<style>
-@media (max-width: 600px) {
-
-    /* GIẢM KHOẢNG TRẮNG GIỮA 2 TEXTBOX */
-    .stVerticalBlock {
-        margin-top: 0px !important;
-        margin-bottom: 0px !important;
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
-    }
-
-    /* LÀM TEXTBOX GẦN LABEL HƠN */
-    div[data-testid="stMarkdownContainer"] {
-        margin-bottom: 4px !important;
-    }
-
-    /* THU HẸP SWAP */
-    .swap-container {
-        margin: 2px 0px !important;
-        padding: 0px !important;
-    }
-
-    /* NÚT SWAP — cách trên & dưới giảm mạnh */
-    .swap-container button {
-        margin: 2px !important;
-    }
-
-    /* GIẢM KHOẢNG TRẮNG TOÀN BỘ APP */
-    div[data-testid="block-container"] {
-        padding-top: 2px !important;
-    }
-
-    /* ST COLUMNS khoảng cách sát nhau */
-    div[data-testid="column"] {
-        padding-left: 2px !important;
-        padding-right: 2px !important;
-    }
-
-    /* THU NHỎ SPACE TRÊN DƯỚI LABEL */
-    .label_text {
-        margin-bottom: 1px !important;
-        margin-top: 1px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
 
 # 4. HEADER
 # ==============================
