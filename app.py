@@ -22,26 +22,43 @@ st.set_page_config(
 st.markdown("""
 <style>
 @media (max-width: 600px) {
-    .css-ocqkz7 {
+    div[data-testid="column"] {
+        display: inline-block !important;
+        width: 49% !important;
+        vertical-align: top;
+    }
+    div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
         flex-direction: row !important;
-    }
-    .stColumn {
-        width: 50% !important;
-        min-width: 50% !important;
-    }
-    .block-container {
-        width: 100vw !important;
+        width: 100% !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
-st.markdown("""
-<style>
-textarea {
-    font-size: 16px !important;
-}
-</style>
-""", unsafe_allow_html=True)
+
+# st.markdown("""
+# <style>
+# @media (max-width: 600px) {
+#     .css-ocqkz7 {
+#         flex-direction: row !important;
+#     }
+#     .stColumn {
+#         width: 50% !important;
+#         min-width: 50% !important;
+#     }
+#     .block-container {
+#         width: 100vw !important;
+#     }
+# }
+# </style>
+# """, unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# textarea {
+#     font-size: 16px !important;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 
 # ==============================
 # 2. SESSION STATE
