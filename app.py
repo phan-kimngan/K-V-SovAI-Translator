@@ -235,6 +235,47 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+st.markdown("""
+<style>
+
+@media (max-width: 600px) {
+
+    /* tiêu đề cao hơn một chút */
+    h2 {
+        margin-top: 10px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* label Vietnamese / Korean nhỏ hơn */
+    div[style*='font-size:25px; font-weight:600;'] {
+        font-size: 18px !important;
+        margin-bottom: 2px !important;
+        margin-top: 6px !important;
+    }
+
+    /* căn giữa nút đổi chiều chính xác */
+    .swap-container {
+        height: 50px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    /* nút đổi chiều to hơn và rõ hơn */
+    .swap-container button {
+        font-size: 24px !important;
+        padding: 6px !important;
+        border-radius: 50% !important;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+    }
+
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # 4. HEADER
 # ==============================
 st.markdown(
