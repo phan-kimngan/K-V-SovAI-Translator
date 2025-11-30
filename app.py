@@ -24,6 +24,62 @@ st.set_page_config(
 # 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
 st.markdown("""
 <style>
+
+@media (max-width: 600px) {
+
+    /* ===== TIÊU ĐỀ ===== */
+    h2 {
+        font-size: 26px !important;
+        margin-top: 18px !important;
+        margin-bottom: 12px !important;
+        text-align: center !important;
+    }
+
+    /* ===== LABEL Vietnamese / Korean ===== */
+    div[data-testid="column"] > div > div > div {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        margin-top: 6px !important;
+        margin-bottom: 4px !important;
+        color: #000000 !important;
+    }
+
+    /* ===== TEXT AREA ===== */
+    textarea {
+        height: 150px !important;
+        font-size: 16px !important;
+    }
+
+    /* ===== CONTAINER GIỮA — SWAP ===== */
+    div[data-testid="column"] div.swap-container {
+        height: 50px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    /* ===== NÚT SWAP CHÍNH GIỮA ===== */
+    .swap-container button {
+        font-size: 26px !important;
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0px !important;
+    }
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
 @media (max-width: 600px) {
     /* giữ 2 cột song song nếu có thể */
     div[data-testid="stHorizontalBlock"] {
