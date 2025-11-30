@@ -110,8 +110,8 @@ st.markdown("""
     .swap-container {
         display: flex;
         justify-content: center !important;
-        margin-top: -35px !important;
-        margin-bottom: 10px !important;
+        margin-top: -40px !important;
+        margin-bottom: 0px !important;
         transform: translateY(-10px);
         align-items: center !important;
     }
