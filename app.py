@@ -68,8 +68,8 @@ st.markdown("""
     /* thu gọn khoảng cách vùng swap */
     .swap-container {
         height: 32px !important;
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
+        margin-top: 1px !important;
+        margin-bottom: 1px !important;
     }
     /* khối chứa nút swap */
     .swap-container {
