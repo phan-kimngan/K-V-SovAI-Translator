@@ -34,7 +34,7 @@ st.markdown("""
 
     /* Kéo title lên cao hơn */
     div[style*='K-V SovAI Translator'] {
-        margin-top: -10px !important;
+        margin-top: -20px !important;
     }
 
     /* Căn giữa nút icon 🔊 và ↔️ */
@@ -51,17 +51,12 @@ st.markdown("""
         margin-top: -35px !important;
         margin-bottom: 10px !important;
         transform: translateY(-10px);
+        align-items: center !important;
     }
 
     /* Xử lý khoảng cách dưới Vietnamese */
     div[style*='font-size:25px'] {
         margin-bottom: 0px !important;
-    }
-    /* label Vietnamese / Korean */
-    div[style*="font-size:12px; font-weight:600;"] {
-        font-size: 12px !important;
-        margin-top: -10px !important;
-        margin-bottom: -10px !important;
     }
     textarea {
         height: 150px !important;
