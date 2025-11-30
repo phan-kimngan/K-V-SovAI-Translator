@@ -22,6 +22,74 @@ st.set_page_config(
 
 # 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
 # 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
+# ==============================
+# HARD-FORCE HTML UI
+# ==============================
+
+st.markdown("""
+<style>
+
+.main-wrap {
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    width:100%;
+    gap:12px;
+}
+
+/* LEFT + RIGHT panels */
+.box {
+    width:48%;
+}
+
+/* FORCE ALWAYS HORIZONTAL */
+@media (max-width: 600px) {
+    .main-wrap {
+        display:flex !important;
+        flex-direction:row !important;
+        flex-wrap:nowrap !important;
+        overflow-x:hidden !important;
+    }
+    .box {
+        width:50% !important;
+    }
+}
+
+/* native textarea */
+.box textarea {
+    width:100%;
+    height:200px;
+    border-radius:12px;
+    border:1px solid #9EC8D1;
+    padding:10px;
+    font-size:16px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==============================
+# HTML UI
+# ==============================
+st.markdown(f"""
+<div class="main-wrap">
+
+  <div class="box">
+      <div style="color:#000;font-size:25px;font-weight:600;">{left_label}</div>
+      <textarea id="input_textarea">{st.session_state.input_text}</textarea>
+  </div>
+
+  <div class="box">
+      <div style="color:#000;font-size:25px;font-weight:600;">{right_label}</div>
+      <textarea id="output_textarea">{st.session_state.translation}</textarea>
+  </div>
+
+</div>
+
+""", unsafe_allow_html=True)
+
+
 st.markdown("""
 <style>
 
