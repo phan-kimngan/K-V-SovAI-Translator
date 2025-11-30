@@ -24,7 +24,8 @@ st.set_page_config(
 st.markdown("""
 <style>
 @media (max-width: 600px) {
-    /* giữ 2 cột song song nếu có thể */
+
+    /* Giữ 2 ô song song */
     div[data-testid="stHorizontalBlock"] {
         display: flex !important;
         flex-direction: row !important;
@@ -36,55 +37,28 @@ st.markdown("""
         vertical-align: top;
     }
 
-    /* thu gọn padding của container chính */
-    .block-container {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        padding-top: 8px !important;
-        padding-bottom: 20px !important;
-    }
-
-    /* header gọn hơn một chút */
-    h2 {
-        margin-top: 4px !important;
-        margin-bottom: 10px !important;
-        font-size: 24px !important;
-    }
-
-    /* label Vietnamese / Korean */
-    div[style*="font-size:25px; font-weight:600;"] {
-        font-size: 20px !important;
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
-    }
-
-    /* textarea thấp hơn để đỡ chiếm chiều cao màn hình */
-    textarea {
-        height: 150px !important;
-        font-size: 16px !important;
-    }
-
-    /* thu gọn khoảng cách vùng swap ↔️ */
+    /* khối chứa nút swap */
     .swap-container {
-        height: 32px !important;
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        height: 200px !important;
+        width: 100% !important;
     }
 
-    /* nút bấm nhỏ gọn hơn */
-    .stButton > button {
-        padding: 6px 12px !important;
-        font-size: 14px !important;
+    /* Nút swap dọc lên xuống */
+    .swap-container button {
+        transform: rotate(90deg);
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 24px !important;
+        border-radius: 50% !important;
     }
 
-    /* history box gọn lại */
-    .history-box {
-        margin-bottom: 4px !important;
-        padding: 6px !important;
-    }
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ==============================
 # 2. SESSION STATE
@@ -251,7 +225,7 @@ col1, col_center, col2 = st.columns([1, 0.25, 1])
 # ==============================
 with col_center:
     st.markdown("<div class='swap-container'>", unsafe_allow_html=True)
-    swap_clicked = st.button("↔️", key="swap_button")
+    swap_clicked = st.button("⬆️⬇️", key="swap_button")
     st.markdown("</div>", unsafe_allow_html=True)
 
 if swap_clicked:
