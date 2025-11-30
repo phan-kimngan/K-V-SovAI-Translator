@@ -57,7 +57,12 @@ st.markdown("""
     div[style*='font-size:25px'] {
         margin-bottom: 0px !important;
     }
-    
+    /* label Vietnamese / Korean */
+    div[style*="font-size:12px; font-weight:600;"] {
+        font-size: 12px !important;
+        margin-top: -10px !important;
+        margin-bottom: -10px !important;
+    }
     textarea {
         height: 150px !important;
         font-size: 16px !important;
