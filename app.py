@@ -340,6 +340,63 @@ st.markdown(
 # ==============================
 # 5. LAYOUT
 # ==============================
+# 5. LAYOUT — HTML FIX
+# ==============================
+
+st.markdown("""
+<style>
+.trans-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.trans-col {
+    width: 48%;
+}
+
+/* TRÊN MOBILE VẪN GIỮ HÀNG NGANG */
+@media (max-width: 600px) {
+    .trans-box {
+        display: flex;
+        flex-direction: row !important;
+        width: 100% !important;
+    }
+    .trans-col {
+        width: 49% !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(f"""
+<div class="trans-box">
+
+    <div class="trans-col">
+
+        <div style='color: #000000;font-size:25px; font-weight:600;'>{left_label}</div>
+
+        <textarea id="input_box" style="width:100%; height:200px; border-radius:12px;">
+{st.session_state.input_text}
+        </textarea>
+
+    </div>
+
+    <div class="trans-col">
+
+        <div style='color: #000000; font-size:25px; font-weight:600;'>{right_label}</div>
+
+        <textarea id="output_box" style="width:100%; height:200px; border-radius:12px;">
+{st.session_state.translation}
+        </textarea>
+
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
+
+
 col1, col_center, col2 = st.columns([1, 0.25, 1])
 #col1, col2 = st.columns(2)
 
