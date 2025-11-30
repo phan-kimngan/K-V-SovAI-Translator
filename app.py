@@ -10,26 +10,7 @@ def translate_kor_to_vie(text):
 def translate_vie_to_kor(text):
     return text
     
-    
-import speech_recognition as sr
-
-def record_and_transcribe(language="vi"):
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.info("🎙️ Đang nghe... nói đi nhé...")
-        audio = r.listen(source)
-
-    try:
-        st.success("⏳ Đang xử lý giọng nói...")
-        text = r.recognize_google(audio, language=language)
-        return text
-    except sr.UnknownValueError:
-        st.error("❗Không hiểu âm thanh")
-        return ""
-    except sr.RequestError:
-        st.error("❗Không kết nối được dịch vụ nhận dạng")
-        return ""
-        
+       
 # ==============================
 # 1. PAGE CONFIG
 # ==============================
