@@ -452,21 +452,52 @@ if st.button("🌐 Translate", use_container_width=True):
 # ==============================
 # 12. HISTORY VIEW
 # ==============================
+# 12. HISTORY VIEW
+# ==============================
 st.markdown("<div style='color: #000000; font-size:25px; font-weight:600; margin-top:10px;'>🕘 History</div>", unsafe_allow_html=True)
 
-# 2 nút nằm cùng một hàng
+st.markdown("""
+<style>
+.hist-btn-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* nút bấm */
+.hist-btn-box button {
+    width: 100%;
+    padding: 10px;
+}
+
+/* mobile tối ưu */
+@media (max-width: 600px) {
+    .hist-btn-box {
+        display: flex;
+        flex-direction: row !important;
+        width: 100%;
+        gap: 8px !important;
+    }
+    .hist-btn-box button {
+        flex: 1;
+        font-size: 14px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("<div class='hist-btn-box'>", unsafe_allow_html=True)
+
 colH1, colH2 = st.columns([1, 1])
 
 with colH1:
-    st.markdown("<div style='display:flex; justify-content:flex-start;'>", unsafe_allow_html=True)
-    if st.button("🧹 Clear all history"):
+    if st.button("🧹 Clear all history", use_container_width=True):
         st.session_state.history = []
         st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with colH2:
-    st.markdown("<div style='display:flex; justify-content:flex-end;'>", unsafe_allow_html=True)
-    if st.button("💾 Export to CSV"):
+    if st.button("💾 Export to CSV", use_container_width=True):
         if st.session_state.history:
             df = pd.DataFrame(st.session_state.history)
             df.to_csv("translation_history.csv", index=False)
@@ -478,8 +509,10 @@ with colH2:
                     mime="text/csv"
                 )
         else:
-            st.warning("⚠️ No data to export")
-    st.markdown("</div>", unsafe_allow_html=True)
+            st.warning("⚠️ Không có dữ liệu để export")
+
+st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 # SHOW HISTORY LIST
