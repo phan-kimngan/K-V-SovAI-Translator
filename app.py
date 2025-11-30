@@ -467,22 +467,8 @@ st.markdown("""
     flex-direction: row;
     justify-content: space-between;
     gap: 10px;
-    width: 100%;
 }
 
-.hist-btn-row > div {
-    flex: 1;
-}
-
-/* padding mobile */
-@media (max-width: 600px) {
-    .hist-btn-row {
-        gap: 6px !important;
-    }
-    .stButton > button {
-        font-size: 14px !important;
-        padding: 8px !important;
-    }
 }
 </style>
 """, unsafe_allow_html=True)
