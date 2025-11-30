@@ -54,8 +54,8 @@ st.markdown("""
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
-        margin: -50 auto !important;
-        padding: -50 !important;
+        margin: 0 auto !important;
+        padding: -10 !important;
     }
 
     /* nút swap */
@@ -67,7 +67,7 @@ st.markdown("""
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        margin: -50 auto !important;
+        margin: 0 auto !important;
     }
 
     /* ===== giảm khoảng trắng extra giữa các phần tử ===== */
