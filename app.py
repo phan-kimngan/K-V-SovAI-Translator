@@ -21,7 +21,7 @@ st.set_page_config(
 )
 st.markdown("""
 <style>
-@media (max-width: 600px) {
+@media (max-width: 200px) {
     .css-ocqkz7 {
         flex-direction: row !important;
     }
