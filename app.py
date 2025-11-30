@@ -24,6 +24,52 @@ st.set_page_config(
 # 💡 CSS MOBILE: giữ 2 cột, tối ưu khoảng trắng
 st.markdown("""
 <style>
+
+@media (max-width: 600px) {
+
+    /* Kéo toàn bộ content lên trên */
+    .main > div:first-child {
+        padding-top: 0px !important;
+    }
+
+    /* Kéo title lên cao hơn */
+    div[style*='K-V SovAI Translator'] {
+        margin-top: -10px !important;
+    }
+
+    /* Căn giữa nút icon 🔊 và ↔️ */
+    .stButton > button {
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Đưa swap button nằm giữa 2 textbox */
+    .swap-container {
+        display: flex;
+        justify-content: center !important;
+        margin-top: -35px !important;
+        margin-bottom: 10px !important;
+        transform: translateY(-10px);
+    }
+
+    /* Xử lý khoảng cách dưới Vietnamese */
+    div[style*='font-size:25px'] {
+        margin-bottom: 0px !important;
+    }
+    
+    textarea {
+        height: 150px !important;
+        font-size: 16px !important;
+    }
+
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
 @media (max-width: 600px) {
     /* giữ 2 cột song song nếu có thể */
     div[data-testid="stHorizontalBlock"] {
