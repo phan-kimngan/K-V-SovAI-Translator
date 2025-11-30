@@ -273,58 +273,55 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+# khoảng cách 2 box trong mobile
 st.markdown(
     """
     <style>
-
-    /* XÓA VIỀN KHUNG LỚN HEADER */
-    .stApp header, .stApp div[data-testid="stDecoration"] {
-        display: none !important;
+    .swap-container {
+        position: relative;
+        height: 10px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -12px !important;
+        margin-bottom: -8px !important;
+        padding: 0 !important;
     }
-
-    /* XÓA KHUNG NỀN NHẬN DIỆN CỦA STREAMLIT CHO TITLE */
-    div[data-testid="stMarkdownContainer"] h2 {
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* XÓA NỀN CHO NHÃN Vietnamese / Korean */
-    div[data-testid="stMarkdownContainer"] div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* TARGET LABELS TRỰC TIẾP */
-    div[role="textbox"]::placeholder,
-    div[role="textbox"],
-    .css-1uixxvy,
-    .css-1r6slb0 {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* XÓA KHUNG Ở GIỮA */
-    .swap-container,
-    div[data-testid="column"] div div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* XÓA VIỀN TRỪ TEXTAREA */
-    textarea {
-        border: 1px solid #9EC8D1 !important;
-        border-radius: 12px !important;
-        background: white !important;
-    }
-
     </style>
     """,
     unsafe_allow_html=True
 )
+st.markdown("""
+<style>
+
+@media (max-width: 600px) {
+
+    /* TEXTBOX TRẮNG TO HƠN */
+    textarea {
+        height: 260px !important;
+        font-size: 17px !important;
+    }
+
+    /* THU NHỎ SWAP BUTTON */
+    .swap-container button {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 22px !important;
+    }
+
+    /* THU NHỎ KHOẢNG CÁCH GIỮA 2 TEXTBOX */
+    .swap-container {
+        height: 10px !important;
+        margin-top: -12px !important;
+        margin-bottom: -14px !important;
+        padding: 0 !important;
+    }
+
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 # 4. HEADER
 # ==============================
