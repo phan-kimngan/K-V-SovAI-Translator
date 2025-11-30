@@ -457,7 +457,7 @@ with colH1:
         st.rerun()
 
 with colH2:
-    if st.button("💾 Export history to CSV"):
+    if st.button("💾 Export to CSV"):
         if st.session_state.history:
             df = pd.DataFrame(st.session_state.history)
             df.to_csv("translation_history.csv", index=False)
