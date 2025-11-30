@@ -52,13 +52,6 @@ st.markdown("""
         font-size: 24px !important;
     }
 
-    /* label Vietnamese / Korean */
-    div[style*="font-size:12px; font-weight:600;"] {
-        font-size: 12px !important;
-        margin-top: 1px !important;
-        margin-bottom: 1px !important;
-    }
-
     /* textarea thấp hơn để đỡ chiếm chiều cao màn hình */
     textarea {
         height: 150px !important;
