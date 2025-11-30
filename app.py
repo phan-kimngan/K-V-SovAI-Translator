@@ -78,6 +78,49 @@ if "history" not in st.session_state:
 # ==============================
 # 3. CSS
 # ==============================
+st.markdown("""
+<style>
+/* MOBILE SPACING IMPROVEMENT */
+@media (max-width: 600px) {
+
+    /* thu nhỏ padding container */
+    .block-container {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /* giảm khoảng cách giữa 2 box text */
+    textarea {
+        height: 160px !important; 
+        font-size: 16px !important;
+    }
+
+    /* giảm margin history box */
+    .history-box {
+        margin-bottom: 4px !important;
+        padding: 6px !important;
+    }
+
+    /* thu gọn chiều cao nút Translate */
+    .stButton > button {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+
+    /* giảm khoảng cách phía trên & dưới label Vietnamese / Korean */
+    div[style*='font-size:25px'] {
+        font-size: 19px !important;
+        margin-bottom: 4px !important;
+        margin-top: 4px !important;
+    }
+
+    /* giảm chiều cao swap arrow button */
+    .swap-container {
+        height: 40px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 
