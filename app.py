@@ -318,10 +318,7 @@ if st.button("🌐 Translate", use_container_width=True):
         st.rerun()
 
 # ==============================
-# 11. FOOTER
-# ==============================
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:gray;'>© 2025 K-V SovAI Translator</p>", unsafe_allow_html=True)
+
 
 # ==============================
 # 12. HISTORY VIEW
@@ -379,4 +376,7 @@ for item in reversed(st.session_state.history):
         """,
         unsafe_allow_html=True
     )
-    
+# 11. FOOTER
+# ==============================
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:gray;'>© 2025 K-V SovAI Translator</p>", unsafe_allow_html=True)
