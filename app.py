@@ -273,7 +273,7 @@ st.markdown("""
 # ==============================
 st.markdown(
     """
-    <h2 style='text-align:center; color:#1E3A8A;'>
+    <h2 style='text-align:center; color:#1E3A8A; margin-top: 1px !important; margin-bottom: 1px !important;'>
         🇰🇷 K-V SovAI Translator 🇻🇳
     </h2>
     """,
