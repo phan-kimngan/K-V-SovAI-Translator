@@ -52,9 +52,7 @@ st.markdown("""
 
 
     /* ===== giảm khoảng trắng extra giữa các phần tử ===== */
-    .block-container {
-        gap: 1px !important;
-    }
+
 
     div[data-testid="stVerticalBlock"]{
         gap: 6px !important;
