@@ -4,7 +4,19 @@ import pandas as pd
 from datetime import datetime
 import requests
 import streamlit.components.v1 as components
+from streamlit_webrtc import webrtc_streamer, AudioProcessorBase
+import av
+import numpy as np
+import io
+class AudioProcessor(AudioProcessorBase):
+    def __init__(self):
+        self.audio_data = b""
 
+    def recv_audio(self, frame: av.AudioFrame) -> av.AudioFrame:
+        pcm = frame.to_ndarray()
+        pcm = pcm.tobytes()
+        self.audio_data += pcm
+        return frame
 
 
 API_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie"
@@ -390,6 +402,8 @@ with col1:
         key="input_text",
         label_visibility="collapsed"
     )
+
+
     components.html(
 """
 <button id="holdToTalk"
@@ -460,54 +474,37 @@ async function stopRecording(e) {
 
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
-
-        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
-            method: "POST",
-            body: formData,
-            mode: "cors",
-            headers: {"ngrok-skip-browser-warning": "1" }
-        });
-
-        let raw = await r.text();
-        let res = JSON.parse(raw);
-
-        statusBox.innerHTML = "✔ OK: " + res.text;
-
-        window.parent.postMessage(
-            { type: "voice-text", text: res.text },
-            "*"
-        );
-
     }
 }
 </script>
 """,
 height=230
 )
-    st.components.v1.html(
-        f"""
-        <script>
-        window.addEventListener('message', (event) => {{
-            if (event.data.type === 'voice-text') {{
-                const text = event.data.text;
-                // gửi nội dung về python bằng Streamlit hack
-                window.parent.postMessage({{
-                    isStreamlitMessage: true,
-                    type: "streamlit:setQueryParams",
-                    queryParams: {{ recorded: [text] }}
-                }}, "*");
-            }}
-        }});
-        </script>
-        """,
-        height=0
-    )
 
-    # NHẬN TEXT
-    qp = st.experimental_get_query_params()
-    if "recorded" in qp:
-        st.session_state.input_text = qp["recorded"][0]
-        st.experimental_set_query_params()  # clear
+    with st.spinner("Đang nhận dạng giọng nói... ⏳"):
+            # Gửi file audio tới API voice2text (giống như JS phía client trước đây)
+        files = {
+                "file": ("voice.webm", audio_file, "audio/webm")
+            }
+        try:
+            r = requests.post(
+                    "https://tenacious-von-occludent.ngrok-free.dev/voice2text",
+                    files=files,
+                    headers={"ngrok-skip-browser-warning": "1"}
+            )
+            data = r.json()
+                # tuỳ API trả về key "text" hay "result"
+            text = data.get("text") or data.get("result") or ""
+        except Exception as e:
+            text = ""
+            st.error(f"Lỗi khi gọi API voice2text: {e}")
+
+        if text:
+                # Cập nhật session_state và rerun để textbox bên trái nhận giá trị mới
+            st.session_state.input_text = text
+            st.experimental_rerun()
+        else:
+            st.warning("⚠ Không nhận dạng được nội dung từ file âm thanh.")
 
 
     if st.button("🔊", key="speak_input"):
