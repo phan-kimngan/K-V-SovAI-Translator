@@ -240,7 +240,7 @@ st.markdown(
     textarea {
         background-color: #FFFFFF !important;
         color: #1E1E1E !important;
-        border: rgba(255,255,255,0.6) !important;
+        #border: rgba(255,255,255,0.6) !important;
         border-radius: 14px !important;
         padding: 12px !important;
         box-shadow: 0 3px 6px rgba(0,0,0,0.08);
