@@ -487,12 +487,12 @@ async function stopRecording(e) {
         let res = JSON.parse(raw);
 
         statusBox.innerHTML = "✔ OK: " + res.text;
-        Streamlit.setComponentValue(res.text);
+        #Streamlit.setComponentValue(res.text);
 
-        #window.parent.postMessage(
-        #    { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
-        #    "*"
-        #);
+        window.parent.postMessage(
+            { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
+            "*"
+        );
     }
 }
 </script>
