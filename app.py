@@ -398,9 +398,19 @@ with col1:
         height=200,
         key="input_text"
     )
-    
+    new_text = components.html("""
+<script>
+window.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "streamlit:setComponentValue") {
+        Streamlit.setComponentValue(event.data.value)
+    }
+});
+</script>
+""", height=0)
 
-        
+    if new_text:
+        st.session_state.input_text = new_text
+        st.rerun()        
         
         
     #st.session_state.input_text = input_text
@@ -654,10 +664,7 @@ for item in reversed(st.session_state.history):
         """,
         unsafe_allow_html=True
     )
-if "_component_value" in st.session_state and st.session_state._component_value:
-    st.session_state.input_text = st.session_state._component_value
-    st.session_state._component_value = None
-    st.rerun()
+
 # 11. FOOTER
 # ==============================
 st.markdown("<hr>", unsafe_allow_html=True)
