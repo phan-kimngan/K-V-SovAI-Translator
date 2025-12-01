@@ -3,7 +3,7 @@ from gtts import gTTS
 import pandas as pd
 from datetime import datetime
 import requests
-
+import streamlit.components.v1 as components
 
 API_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie"
 API_vie_to_kor = "https://tenacious-von-occludent.ngrok-free.dev/vie2kor"      
