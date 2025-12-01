@@ -515,7 +515,7 @@ async function stopRecording(e) {
         #    { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
         #    "*"
         #);
-        Streamlit.setComponentValue(res.text)
+        Streamlit.setComponentValue(res.text);
     }
 }
 </script>
