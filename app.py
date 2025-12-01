@@ -451,7 +451,7 @@ with col1:
 </style>
 
 <button id="holdToTalk">🎤</button>
-<p id="status" style="font-size:10px;color:#444;margin-top:4px;"></p>
+<p id="status" style="font-size:15px;color:#444;margin-top:4px;"></p>
 
 <script>
 let mediaRecorder;
