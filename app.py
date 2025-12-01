@@ -501,7 +501,7 @@ height=230
 )
 
 
-
+st.write(st.session_state)
 
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
