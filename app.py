@@ -195,7 +195,10 @@ if "translation" not in st.session_state:
 
 if "history" not in st.session_state:
     st.session_state.history = []
-
+if "_component_value" in st.session_state and st.session_state._component_value:
+    st.session_state.input_text = st.session_state._component_value
+    st.session_state._component_value = None
+    st.session_state.update_trigger += 1
 
 # ==============================
 # 3. CSS
@@ -646,10 +649,6 @@ for item in reversed(st.session_state.history):
         unsafe_allow_html=True
     )
 
-if "_component_value" in st.session_state:
-    st.session_state.input_text = st.session_state._component_value
-    st.session_state._component_value = None
-    st.rerun()
 # 11. FOOTER
 # ==============================
 st.markdown("<hr>", unsafe_allow_html=True)
