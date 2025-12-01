@@ -237,6 +237,8 @@ st.markdown(
         border-radius: 14px !important;
         padding: 12px !important;
         box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        height: 220px !important;
+        font-size: 17px !important;
     }
 
     /* Buttons */
@@ -269,23 +271,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("""
-<style>
 
-@media (max-width: 400px) {
-
-    /* TEXTBOX TRẮNG TO HƠN */
-    textarea {
-        height: 220px !important;
-        font-size: 17px !important;
-    }
-
-
-
-}
-
-</style>
-""", unsafe_allow_html=True)
 
 # 4. HEADER
 # ==============================
