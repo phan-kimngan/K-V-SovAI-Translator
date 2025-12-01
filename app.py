@@ -321,7 +321,7 @@ with col1:
 .audio-inline {
     display:flex;
     flex-direction:row;
-    gap:4px !important;
+    gap:-10px !important;
 
 }
 </style>
@@ -344,8 +344,6 @@ with col1:
     padding: 0 !important;
     margin: 0 !important;
     margin-left: -6px !important;
-    margin-top:-30px !important;
-    margin-bottom:-30px !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
 }
 #holdToTalk:hover {
