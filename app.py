@@ -395,41 +395,68 @@ with col1:
 
     components.html(
 """
-<button id="holdToTalk"
-    style="
-        width:100%;
-        padding:16px;
-        font-size:18px;
-        border-radius:8px;
-        background:#ff4b4b;
-        color:white;">
-    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
-</button>
-<p id="status" style="font-size:14px;color:#444;"></p>
+<style>
+#holdToTalk {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.58);
+    color: #1E1E1E;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition: 0.12s;
+}
+
+#holdToTalk:hover {
+    background: rgba(255,255,255,0.82);
+    transform: scale(1.07);
+}
+
+/* khi đang ghi âm */
+#holdToTalk.recording {
+    background: rgba(255,80,80,0.9);
+    color:white;
+    border:1px solid rgba(255,255,255,1);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
+  50% { box-shadow: 0 0 12px rgba(255,20,20,1); }
+ 100% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
+}
+</style>
+
+<button id="holdToTalk">🎤</button>
+<p id="status" style="font-size:10px;color:#444;margin-top:4px;"></p>
 
 <script>
 let mediaRecorder;
 let chunks = [];
 let recording = false;
 let startTime = 0;
+btn = document.getElementById("holdToTalk");
+statusBox = document.getElementById("status");
 
-const MIN_TIME = 400;
-const btn = document.getElementById("holdToTalk");
-const statusBox = document.getElementById("status");
-
-// chỉ dùng touchstart + touchend
-btn.addEventListener("touchstart", startRecording);
-btn.addEventListener("touchend", stopRecording);
-// PC
 btn.addEventListener("mousedown", startRecording);
 btn.addEventListener("mouseup", stopRecording);
+btn.addEventListener("touchstart", startRecording);
+btn.addEventListener("touchend", stopRecording);
 
 function startRecording(e) {
     if (recording) return;
     recording = true;
     chunks = [];
     startTime = Date.now();
-    statusBox.innerHTML = "🎙️ Đang ghi âm...";
+
+    btn.classList.add("recording");
+    statusBox.innerHTML = "🎙️";
+    statusBox.style.color = "#ff3b3b";
 
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
@@ -441,21 +468,15 @@ function startRecording(e) {
 
 async function stopRecording(e) {
     if (!recording) return;
-
-    let dt = Date.now() - startTime;
-    if (dt < MIN_TIME) {
-        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
-        recording = false;
-        return;
-    }
-
-    statusBox.innerHTML = "⏳ Đang xử lý...";
-    mediaRecorder.stop();
     recording = false;
+
+    btn.classList.remove("recording");
+    statusBox.innerHTML = "⏳";
+    statusBox.style.color = "#ffaa00";
+    mediaRecorder.stop();
 
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
-
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
 
@@ -469,20 +490,20 @@ async function stopRecording(e) {
         let raw = await r.text();
         let res = JSON.parse(raw);
 
-        statusBox.innerHTML = "✔ OK: " + res.text;
+        statusBox.innerHTML = "✔";
+        statusBox.style.color = "#009f10";
 
-        // gửi text về python session_state
         window.parent.postMessage(
             { type: "voice-text", text: res.text },
             "*"
         );
-
     }
 }
 </script>
 """,
-height=230
+height=95
 )
+
     st.components.v1.html(
 """
 <script>
