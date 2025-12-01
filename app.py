@@ -392,28 +392,44 @@ with col1:
         label_visibility="collapsed"
     )
 
-    left_col1, left_col2 = st.columns([0.12, 0.88])
+    left_col1, left_col2 = st.columns([5, 1])
 
     with left_col1:
-        components.html(
+            components.html(
 """
-<button id="holdToTalk"
-    style="
-            position: relative;
-            width:42px;
-            height:42px;
-            font-size:20px;
-            border-radius:50%;
-            background:#ff3b30;
-            color:white;
-            border:none;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            cursor:pointer;">
-    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
-</button>
-<p id="status" style="font-size:14px;color:#444;"></p>
+<style>
+#holdToTalk {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border:none;
+    background: linear-gradient(145deg, #ff4b4b, #d63b3b);
+    color:white;
+    font-size:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    transition: 0.15s;
+}
+
+#holdToTalk:active {
+    transform: scale(1.13);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+}
+
+/* hiệu ứng nhấp nháy khi ghi âm */
+@keyframes pulseRed {
+  0% { box-shadow: 0 0 6px rgba(255,80,80,0.4);}
+  50% { box-shadow: 0 0 14px rgba(255,60,60,1);}
+  100% { box-shadow: 0 0 6px rgba(255,80,80,0.4);}
+}
+</style>
+
+<button id="holdToTalk">🎤</button>
+<p id="status" style="font-size:11px;color:#444;"></p>
 
 <script>
 let mediaRecorder;
@@ -425,10 +441,8 @@ const MIN_TIME = 400;
 const btn = document.getElementById("holdToTalk");
 const statusBox = document.getElementById("status");
 
-// chỉ dùng touchstart + touchend
 btn.addEventListener("touchstart", startRecording);
 btn.addEventListener("touchend", stopRecording);
-// PC
 btn.addEventListener("mousedown", startRecording);
 btn.addEventListener("mouseup", stopRecording);
 
@@ -437,7 +451,10 @@ function startRecording(e) {
     recording = true;
     chunks = [];
     startTime = Date.now();
-    statusBox.innerHTML = "🎙️ Đang ghi âm...";
+
+    btn.style.animation = "pulseRed 1s infinite";
+    statusBox.innerHTML = "🎙️";
+    statusBox.style.color = "#d63b3b";
 
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
@@ -449,21 +466,15 @@ function startRecording(e) {
 
 async function stopRecording(e) {
     if (!recording) return;
-
-    let dt = Date.now() - startTime;
-    if (dt < MIN_TIME) {
-        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
-        recording = false;
-        return;
-    }
-
-    statusBox.innerHTML = "⏳ Đang xử lý...";
-    mediaRecorder.stop();
     recording = false;
+    btn.style.animation = "";
+    statusBox.innerHTML = "⏳";
+    statusBox.style.color = "#ffaa00";
+
+    mediaRecorder.stop();
 
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
-
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
 
@@ -471,42 +482,23 @@ async function stopRecording(e) {
             method: "POST",
             body: formData,
             mode: "cors",
-            headers: {"ngrok-skip-browser-warning": "1" }
+            headers: {"ngrok-skip-browser-warning": "1"}
         });
 
         let raw = await r.text();
         let res = JSON.parse(raw);
 
-        statusBox.innerHTML = "✔ OK: " + res.text;
+        statusBox.innerHTML = "✔";
+        statusBox.style.color = "#009f10";
 
-        // gửi text về python session_state
         window.parent.postMessage(
             { type: "voice-text", text: res.text },
             "*"
         );
-
     }
 }
 </script>
-""",
-height=230
-)
-        st.components.v1.html(
-"""
-<script>
-window.addEventListener('message', (event) => {
-    if (event.data.type === 'voice-text') {
-        const text = event.data.text;
-
-        window.parent.postMessage({
-            isStreamlitMessage: true,
-            type: "streamlit:setQueryParams",
-            queryParams: { recorded:[text] }
-        }, "*");
-    }
-});
-</script>
-""", height=0)
+""", height=70)
         qp = st.experimental_get_query_params()
 
         if "recorded" in qp:
