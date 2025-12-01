@@ -105,15 +105,7 @@ st.markdown("""
         align-items: center !important;
     }
 
-    /* Đưa swap button nằm giữa 2 textbox */
-    .swap-container {
-        display: flex;
-        justify-content: center !important;
-        margin-top: -40px !important;
-        margin-bottom: 0px !important;
-        transform: translateY(-10px);
-        align-items: center !important;
-    }
+
 
     /* Xử lý khoảng cách dưới Vietnamese */
     div[style*='font-size:25px'] {
