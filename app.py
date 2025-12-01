@@ -120,7 +120,7 @@ st.markdown("""
         margin-bottom: 0px !important;
     }
     textarea {
-        height: 180px !important;
+        height: 150px !important;
         font-size: 16px !important;
     }
 
