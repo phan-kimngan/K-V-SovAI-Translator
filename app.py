@@ -314,38 +314,46 @@ with col1:
 <style>
 
 #holdToTalk {
-    width: 40px !important;
-    height: 40px !important;
-    font-size: 20px !important;
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 18px !important;
     border-radius: 10px !important;
-    background: rgba(255,255,255,0.55) !important;
+    background: rgba(255,255,255,0.65) !important;
     color: #1E1E1E !important;
-    border: 1px solid rgba(255,255,255,0.8) !important;
+    border: 1px solid rgba(255,255,255,0.9) !important;
     display:flex !important;
     justify-content:center !important;
     align-items:center !important;
     padding: 0 !important;
     margin: 0 !important;
-    margin-left: -6px !important;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
-}
-#holdToTalk:hover {
-    background: rgba(255,255,255,0.82);
-    transform: scale(1.07);
+    margin-left: -4px !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.13) !important;
+    flex: 0 0 auto !important;
 }
 
 #copyVoiceBtn {
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.55);
-    border:1px solid rgba(255,255,255,0.8);
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.65);
+    border:1px solid rgba(255,255,255,0.9);
     display:none;
     justify-content:center;
     align-items:center;
-    margin-right:10px;
+    margin-left: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+    flex: 0 0 auto !important;
 }
+
+#status {
+    flex: 1 1 auto !important;
+    max-width: 100% !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 
 /* khi đang ghi âm */
 #holdToTalk.recording {
