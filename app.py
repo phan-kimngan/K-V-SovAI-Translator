@@ -240,24 +240,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("""
-<style>
-@media (max-width: 600px) {
-    .audio-row {
-        display:flex !important;
-        flex-direction:row !important;
-        align-items:center !important;
-        gap:6px !important;
-        margin-top:-4px !important;
-        margin-bottom:-4px !important;
-    }
-    .audio-row > div {
-        margin:0 !important;
-        padding:0 !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 # 4. HEADER
@@ -274,7 +256,7 @@ st.markdown(
 # ==============================
 # 5. LAYOUT
 
-col1, col_center, col2 = st.columns([1, 0.1, 1])
+col1, col_center, col2 = st.columns([1, 0.25, 1])
 #col1, col2 = st.columns(2)
 
 # ==============================
@@ -282,7 +264,7 @@ col1, col_center, col2 = st.columns([1, 0.1, 1])
 # ==============================
 with col_center:
     #st.markdown("<div class='swap-container'>", unsafe_allow_html=True)
-    st.markdown(f"<div style='align-items: center !important; padding-top: -30px !important; padding-bottom: -30px !important;'>", unsafe_allow_html=True)
+    st.markdown(f"<div style='align-items: center !important; margin-top: -30px !important; margin-bottom: -30px !important;'>", unsafe_allow_html=True)
     swap_clicked = st.button("⬆️⬇️", key="swap_button")
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -318,56 +300,22 @@ else:
 with col1:
     st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600; margin-bottom:25px'>{left_label}</div>", unsafe_allow_html=True)
 
-    st.text_area(
+    input_text = st.text_area(
         " ",
-        st.session_state.translation,
+        st.session_state.input_text,
         height=200,
-        key="output_box"
+        key="input_text",
+        label_visibility="collapsed"
     )
-
-
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    if st.button("🔊", key="speak_input"):
-        if input_text.strip():
-            tts = gTTS(input_text, lang=src_tts_lang)
-            tts.save("input_tts.mp3")
-            with open("input_tts.mp3", "rb") as f:
-                st.audio(f.read(), format="audio/mp3")  
-    st.markdown("""
-<style>
-
-.textbox-wrap {
-    position: relative;
-}
-
-#voiceBox {
-    position: absolute;
-    bottom: 10px;
-    right: 12px;
-    z-index: 10;
-}
-#holdToTalk {
-    width: 38px !important;
-    height: 38px !important;
-    font-size: 20px !important;
-    border-radius: 8px !important;
-    background: rgba(255,255,255,0.8) !important;
-    color: #1E1E1E !important;
-    border: 1px solid rgba(0,0,0,0.25) !important;
-}
-
-</style>
-""", unsafe_allow_html=True)
-
     # NÚT RECORD + STATUS + JS
     st.markdown("""
 <style>
 .audio-inline {
     display:flex;
     flex-direction:row;
-    gap:-10px !important;
-
+    gap:4px !important;
+    margin-top:6px !important;
+    margin-bottom:0px !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -481,6 +429,15 @@ async function stopRecording(e) {
 """,
 height=80
 )
+    
+    if st.button("🔊", key="speak_input"):
+        if input_text.strip():
+            tts = gTTS(input_text, lang=src_tts_lang)
+            tts.save("input_tts.mp3")
+            with open("input_tts.mp3", "rb") as f:
+                st.audio(f.read(), format="audio/mp3")  
+
+
 
 # ==============================
 # 9. RIGHT PANEL
