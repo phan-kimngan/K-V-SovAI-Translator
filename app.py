@@ -388,20 +388,17 @@ with col1:
     #    st.session_state.temp_voice_text = ""   # reset
     #else:
     #    default_text = st.session_state.input_text
-    if "_component_value" in st.session_state and st.session_state._component_value:
-        st.session_state.input_text = st.session_state._component_value
-        st.session_state._component_value = None
-        #st.session_state.update_trigger += 1
-    input_text = st.text_area(
-        "",
-        value=st.session_state.input_text,
-        height=200,
-        key="input_text"
-    )
+    #if "_component_value" in st.session_state and st.session_state._component_value:
+    #    st.session_state.input_text = st.session_state._component_value
+    #    st.session_state._component_value = None
+    #    st.session_state.update_trigger += 1
+    #input_text = st.text_area(
+    #    "",
+    #    value=st.session_state.input_text,
+    #    height=200,
+    #    key="input_text"
+    #)
     
-
-        
-        
         
     #st.session_state.input_text = input_text
 
@@ -492,17 +489,17 @@ async function stopRecording(e) {
             { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
             "*"
         );
-        console.log("POSTMESSAGE SENT")
     }
 }
 </script>
 """,
 height=230
-)
-
-    st.write(st.session_state)
-
-
+)  
+    voice = st.session_state.get("_component_value")
+    if voice:
+        st.session_state.input_text = voice
+        st.session_state._component_value = None
+    st.text_area("Input", key="input_text")
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
             tts = gTTS(input_text, lang=src_tts_lang)
