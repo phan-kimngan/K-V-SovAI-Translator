@@ -396,12 +396,12 @@ with col1:
         height=200,
         key="input_text"
     )
-    st.session_state.input_text = input_text
+    
     if "_component_value" in st.session_state and st.session_state._component_value:
         st.session_state.input_text = st.session_state._component_value
         st.session_state._component_value = None
         st.session_state.update_trigger += 1
-        st.rerun()
+        
         
     #st.session_state.input_text = input_text
 
