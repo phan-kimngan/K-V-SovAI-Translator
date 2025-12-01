@@ -307,8 +307,8 @@ st.markdown("""
 
     /* THU NHỎ SWAP BUTTON */
     .swap-container button {
-        width: 48px !important;
-        height: 48px !important;
+        width: 55px !important;
+        height: 55px !important;
         font-size: 22px !important;
     }
 
@@ -317,7 +317,7 @@ st.markdown("""
         height: 10px !important;
         margin-top: -60px !important;
         margin-bottom: -14px !important;
-        padding: 0 !important;
+        padding: -10 !important;
     }
 
 }
@@ -405,7 +405,7 @@ with col1:
 <style>
 #holdToTalk {
     width: 42px;
-    height: 42px;
+    height: 40px;
     font-size: 22px;
     border-radius: 14px;
     background: rgba(255,255,255,0.58);
