@@ -397,9 +397,9 @@ with col1:
 """
 <button id="holdToTalk"
     style="
-        width:100%;
+        width:42px;
         padding:16px;
-        font-size:18px;
+        font-size:12px;
         border-radius:8px;
         background:#ff4b4b;
         color:white;">
