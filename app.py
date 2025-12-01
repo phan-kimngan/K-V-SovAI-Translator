@@ -507,7 +507,7 @@ async function stopRecording(e) {
 }
 </script>
 """,
-height=95
+height=20
 )
 
     st.components.v1.html(
