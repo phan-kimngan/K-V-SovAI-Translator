@@ -318,13 +318,19 @@ else:
 with col1:
     st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600; margin-bottom:25px'>{left_label}</div>", unsafe_allow_html=True)
 
+    st.markdown("<div class='textbox-wrap'>", unsafe_allow_html=True)
+
     input_text = st.text_area(
-        " ",
-        st.session_state.input_text,
-        height=200,
-        key="input_text",
-        label_visibility="collapsed"
+    " ",
+    st.session_state.input_text,
+    height=200,
+    key="input_text",
+    label_visibility="collapsed"
     )
+
+    st.markdown("<div id='voiceBox'></div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
     
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
@@ -332,6 +338,33 @@ with col1:
             tts.save("input_tts.mp3")
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")  
+    st.markdown("""
+<style>
+
+.textbox-wrap {
+    position: relative;
+}
+
+#voiceBox {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    z-index: 10;
+}
+<div style='display:flex; justify-content:center; align-items:center;'>
+<button id="holdToTalk">🎤</button>
+#holdToTalk {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 20px !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,0.8) !important;
+    color: #1E1E1E !important;
+    border: 1px solid rgba(0,0,0,0.25) !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
     # NÚT RECORD + STATUS + JS
     st.markdown("""
