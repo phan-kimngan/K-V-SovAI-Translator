@@ -468,7 +468,11 @@ with col1:
         if (recording) return;
         recording = true;
         chunks = [];
-
+        
+        btn.classList.add("recording");
+        statusBox.innerHTML = "🎙️";
+        statusBox.style.color = "#ff3b3b";
+    
         navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
             mediaRecorder = new MediaRecorder(stream);
@@ -481,7 +485,12 @@ with col1:
         if (!recording) return;
         recording = false;
         mediaRecorder.stop();
-
+        
+        btn.classList.remove("recording");
+        statusBox.innerHTML = "⏳";
+        statusBox.style.color = "#ffaa00";
+        mediaRecorder.stop();
+    
         mediaRecorder.onstop = async () => {
             const blob = new Blob(chunks, { type: 'audio/webm' });
             let formData = new FormData();
@@ -496,7 +505,7 @@ with col1:
 
             let raw = await r.text();
             let res = JSON.parse(raw);
-
+            statusBox.innerHTML = "✔"+ res.text;
             window.parent.postMessage(
                 { type: "voice-text", text: res.text },
                 "*"
