@@ -345,11 +345,13 @@ st.markdown("""
 <style>
 @media (max-width: 600px) {
     .swap-container {
-        transform: translateY(-80px) !important;
+        transform: translateY(-35px) !important;   /* đưa lên vừa đủ */
+        margin-bottom: -10px !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
+
 # 4. HEADER
 # ==============================
 st.markdown(
