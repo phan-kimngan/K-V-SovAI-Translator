@@ -2,13 +2,15 @@ import streamlit as st
 from gtts import gTTS
 import pandas as pd
 from datetime import datetime
-import requests
+
 #from predict import translate_kor_to_vie
 #from predict_2 import translate_vie_to_kor
-
-
-API_URL_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie" #translate_kor_to_vie
-API_URL_vie_to_kor = "https://tenacious-von-occludent.ngrok-free.dev/vie2kor" #translate_kor_to_vie
+def translate_kor_to_vie(text):
+    return text
+def translate_vie_to_kor(text):
+    return text
+    
+       
 # ==============================
 # 1. PAGE CONFIG
 # ==============================
@@ -365,13 +367,13 @@ if mode == "vi_to_kr":
     right_label = "Korean"
     src_tts_lang = "vi"
     tgt_tts_lang = "ko"
-    translate_func = API_URL_vie_to_kor
+    translate_func = translate_vie_to_kor
 else:
     left_label = "Korean"
     right_label = "Vietnamese"
     src_tts_lang = "ko"
     tgt_tts_lang = "vi"
-    translate_func = API_URL_kor_to_vie
+    translate_func = translate_kor_to_vie
 
 # ==============================
 # 8. LEFT PANEL
@@ -426,7 +428,7 @@ if st.button("🌐 Translate", use_container_width=True):
     text = st.session_state.input_text.strip()
     if text:
         with st.spinner("Translating... ⏳"):
-            result = requests.get(translate_func, params={"text": text})#translate_func(text)            
+            result = translate_func(text)
             st.session_state.translation = result
 
             # SAVE HISTORY
