@@ -401,6 +401,7 @@ with col1:
         st.session_state.input_text = st.session_state._component_value
         st.session_state._component_value = None
         st.session_state.update_trigger += 1
+        st.rerun()
         
         
     #st.session_state.input_text = input_text
