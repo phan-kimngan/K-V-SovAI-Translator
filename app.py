@@ -119,10 +119,7 @@ st.markdown("""
     div[style*='font-size:25px'] {
         margin-bottom: 0px !important;
     }
-    textarea {
-        height: 150px !important;
-        font-size: 16px !important;
-    }
+
 
 }
 
