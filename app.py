@@ -315,7 +315,128 @@ with col1:
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")  
 
+    # NÚT RECORD + STATUS + JS
+    st.markdown("""
+<style>
+.audio-inline {
+    display:flex;
+    flex-direction:row;
+    gap:4px !important;
+    margin-top:-10px !important;
+    margin-bottom:-10px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+    components.html(
+"""
+<style>
 
+#holdToTalk {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 20px !important;
+    border-radius: 10px !important;
+    background: rgba(255,255,255,0.55) !important;
+    color: #1E1E1E !important;
+    border: 1px solid rgba(255,255,255,0.8) !important;
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    margin-left: -6px !important;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
+}
+#holdToTalk:hover {
+    background: rgba(255,255,255,0.82);
+    transform: scale(1.07);
+}
+
+/* khi đang ghi âm */
+#holdToTalk.recording {
+    background: rgba(255,80,80,0.9);
+    color:white;
+    border:1px solid rgba(255,255,255,1);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
+  50% { box-shadow: 0 0 12px rgba(255,20,20,1); }
+ 100% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
+}
+</style>
+
+<button id="holdToTalk">🎤</button>
+<p id="status" style="font-size:15px;color:#444;margin-top:4px;"></p>
+
+<script>
+let mediaRecorder;
+let chunks = [];
+let recording = false;
+let startTime = 0;
+btn = document.getElementById("holdToTalk");
+statusBox = document.getElementById("status");
+
+btn.addEventListener("mousedown", startRecording);
+btn.addEventListener("mouseup", stopRecording);
+btn.addEventListener("touchstart", startRecording);
+btn.addEventListener("touchend", stopRecording);
+
+function startRecording(e) {
+    if (recording) return;
+    recording = true;
+    chunks = [];
+    startTime = Date.now();
+
+    btn.classList.add("recording");
+    statusBox.innerHTML = "🎙️";
+    statusBox.style.color = "#ff3b3b";
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.start();
+    });
+}
+
+async function stopRecording(e) {
+    if (!recording) return;
+    recording = false;
+
+    btn.classList.remove("recording");
+    statusBox.innerHTML = "⏳";
+    statusBox.style.color = "#ffaa00";
+    mediaRecorder.stop();
+
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        let formData = new FormData();
+        formData.append("file", blob, "voice.webm");
+
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+            method: "POST",
+            body: formData,
+            mode: "cors",
+            headers: {"ngrok-skip-browser-warning": "1" }
+        });
+
+        let raw = await r.text();
+        let res = JSON.parse(raw);
+        statusBox.innerHTML = "✔"+ res.text;;
+        statusBox.style.color = "#111111";
+
+        window.parent.postMessage(
+            { type: "voice-text", text: res.text },
+            "*"
+        );
+    }
+}
+</script>
+""",
+height=80
+)
 
 # ==============================
 # 9. RIGHT PANEL
