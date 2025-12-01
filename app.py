@@ -456,33 +456,55 @@ async function stopRecording(e) {
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
 
-        if (blob.size < 2000) {
-            statusBox.innerHTML = "❗ Âm thanh quá ngắn hoặc không thu được!";
-            return;
-        }
-
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
+
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+            method: "POST",
+            body: formData,
+            mode: "cors",
+            headers: {"ngrok-skip-browser-warning": "1" }
+        });
+
+        let raw = await r.text();
+        let res = JSON.parse(raw);
+
+        statusBox.innerHTML = "✔ OK: " + res.text;
+
+        // gửi text về python session_state
+        window.parent.postMessage(
+            { type: "voice-text", text: res.text },
+            "*"
+        );
+
     }
 }
 </script>
 """,
 height=230
 )
-    with open("voice.webm", "rb") as f:
-        files = {
-            "file": ("voice.webm", f, "audio/webm")
-        }
+    st.components.v1.html(
+"""
+<script>
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'voice-text') {
+        const text = event.data.text;
 
-        with st.spinner("Đang nhận dạng giọng nói... ⏳"):
-            r = requests.post(
-                "https://tenacious-von-occludent.ngrok-free.dev/voice2text",
-                files=files
-            )
-            data = r.json()
-            text = data.get("text") or data.get("result") or ""
-            st.session_state.input_text = text
-            st.experimental_rerun()
+        window.parent.postMessage({
+            isStreamlitMessage: true,
+            type: "streamlit:setQueryParams",
+            queryParams: { recorded:[text] }
+        }, "*");
+    }
+});
+</script>
+""", height=0)
+    qp = st.experimental_get_query_params()
+
+    if "recorded" in qp:
+        st.session_state.input_text = qp["recorded"][0]
+        st.experimental_set_query_params()  # clear param
+        st.experimental_rerun()
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
             tts = gTTS(input_text, lang=src_tts_lang)
