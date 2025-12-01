@@ -480,24 +480,17 @@ async function stopRecording(e) {
 
         statusBox.innerHTML = "✔ OK: " + res.text;
 
-       # window.top.postMessage(
-       #     { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
-       #     "*"
-       # );
         window.parent.postMessage(
-             { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
-             "*"
+            { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
+            "*"
         );
-        console.log("SELF frame:", window.location.href);
-        console.log("PARENT frame:", window.parent.location.href);
-        console.log("TOP frame:", window.top.location.href);
-
     }
 }
 </script>
 """,
 height=230
-)  
+)
+
 
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
