@@ -511,11 +511,11 @@ async function stopRecording(e) {
 
         statusBox.innerHTML = "✔ OK: " + res.text;
 
-        #window.parent.postMessage(
-        #    { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
-        #    "*"
-        #);
-        Streamlit.setComponentValue(res.text);
+        window.parent.postMessage(
+            { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
+            "*"
+        );
+        #Streamlit.setComponentValue(res.text);
     }
 }
 </script>
