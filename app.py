@@ -401,6 +401,7 @@ with col1:
         key=f"input_widget_{st.session_state.update_trigger}"
     )
     if "_component_value" in st.session_state and st.session_state._component_value:
+        st.write("DEBUG _component_value =", st.session_state._component_value)
         st.session_state.input_text = st.session_state._component_value
         st.session_state._component_value = None  # reset lại
         st.session_state.update_trigger += 1
