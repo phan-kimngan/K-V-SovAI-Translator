@@ -384,17 +384,17 @@ else:
 with col1:
     st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600;'>{left_label}</div>", unsafe_allow_html=True)
 
-    if "temp_voice_text" in st.session_state and st.session_state.temp_voice_text:
-        default_text = st.session_state.temp_voice_text
-        st.session_state.temp_voice_text = ""   # reset
-    else:
-        default_text = st.session_state.input_text
+    #if "temp_voice_text" in st.session_state and st.session_state.temp_voice_text:
+    #    default_text = st.session_state.temp_voice_text
+    #    st.session_state.temp_voice_text = ""   # reset
+    #else:
+    #    default_text = st.session_state.input_text
 
     input_text = st.text_area(
         "",
         st.session_state.input_text,
         height=200,
-        key=f"input_widget_{st.session_state.update_trigger}"
+        key="input_text"
     )
 
     st.session_state.input_text = input_text
