@@ -396,56 +396,81 @@ with col1:
 
     st.session_state.input_text = input_text
 
-    st.markdown("""
-    <button id="voiceBtn"
-        style="
-            width:100%; 
-            padding:14px;
-            font-size:18px;
-            border-radius:8px;
-            background:#ff4b4b;
-            color:white;">
-        🎤 Nhấn để nói
-    </button>
+    components.html(
+"""
+<button id="holdToTalk"
+    style="
+        width:100%;
+        padding:16px;
+        font-size:18px;
+        border-radius:8px;
+        background:#ff4b4b;
+        color:white;">
+    🎤 NHẤN VÀ GIỮ ĐỂ NÓI
+</button>
+<p id="status" style="font-size:14px;color:#444;"></p>
 
-    <p id="voiceStatus" style="color:#222; font-size:14px"></p>
+<script>
+let mediaRecorder;
+let chunks = [];
 
-    <script>
-    const btn = document.getElementById("voiceBtn");
-    const status = document.getElementById("voiceStatus");
+const btn = document.getElementById("holdToTalk");
+const statusBox = document.getElementById("status");
 
-    btn.onclick = () => {
-        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        var rec = new SpeechRecognition();
+// BẮT ĐẦU GHI ÂM KHI GIỮ NÚT
+btn.onmousedown = startRecording;
+btn.ontouchstart = startRecording;
 
-        rec.lang = "vi-VN";
-        rec.interimResults = false;
-        rec.maxAlternatives = 1;
+// DỪNG GHI ÂM KHI THẢ NÚT
+btn.onmouseup = stopRecording;
+btn.ontouchend = stopRecording;
 
-        rec.start();
-        status.innerHTML = "🎙️ Đang nghe...";
 
-        rec.onresult = function(event) {
-            const text = event.results[0][0].transcript;
+function startRecording() {
+    chunks = [];
+    statusBox.innerHTML = "🎙️ Đang ghi âm...";
 
-            // gửi text vào streamlit
-            window.parent.postMessage(
-                { isStreamlitMessage: true,
-                  type: "streamlit:setComponentValue",
-                  value: text
-                },
-                "*"
-            );
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
 
-            status.innerHTML = "✔ Đã ghi âm!";
-        };
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    });
+}
 
-        rec.onerror = function(event) {
-            status.innerHTML = "❗ Lỗi: " + event.error;
-        };
-    };
-    </script>
-""", unsafe_allow_html=True)
+function stopRecording() {
+    if (!mediaRecorder) return;
+    statusBox.innerHTML = "⏳ Đang xử lý...";
+
+    mediaRecorder.stop();
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        
+        let formData = new FormData();
+        formData.append("file", blob, "voice.webm");
+
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+            method: "POST",
+            body: formData
+        });
+
+        let res = await r.json();
+        statusBox.innerHTML = "✔ OK: " + res.text;
+
+        window.parent.postMessage(
+            {
+                isStreamlitMessage: true,
+                type: "streamlit:setComponentValue",
+                value: res.text
+            }, "*");
+    }
+}
+</script>
+""",
+height=220
+)
+
 
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
