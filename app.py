@@ -193,7 +193,12 @@ if "translation" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-
+# ADD — Voice listener handler
+def check_voice_message():
+    params = st.experimental_get_query_params()
+    if "speech" in params:
+        st.session_state.input_text = params["speech"][0]
+check_voice_message()
 # ==============================
 # 3. CSS
 # ==============================
@@ -436,9 +441,10 @@ with col1:
                 })
                 .then(r => r.json())
                 .then(data => {
-                    const textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
-                    textarea.value = data.text;
-                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    window.parent.postMessage(
+                        { type: "STT_RESULT", text: data.text },
+                        "*"
+                    );
                     document.getElementById("status").innerText = "✔ OK!";
                 });
             };
@@ -594,6 +600,18 @@ for item in reversed(st.session_state.history):
         """,
         unsafe_allow_html=True
     )
+components.html("""
+<script>
+window.addEventListener("message", (event) => {
+    if (event.data.type === "STT_RESULT") {
+        const text = event.data.text;
+        const url = new URL(window.location.href);
+        url.searchParams.set("speech", text);
+        window.location.href = url.toString();
+    }
+});
+</script>
+""")
 # 11. FOOTER
 # ==============================
 st.markdown("<hr>", unsafe_allow_html=True)
