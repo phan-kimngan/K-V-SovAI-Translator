@@ -381,10 +381,7 @@ else:
 # 8. LEFT PANEL
 # ==============================
 with col1:
-    st.markdown(
-        f"<div style='color:#000000;font-size:20px;font-weight:600;margin-bottom:10px;'>{left_label}</div>",
-        unsafe_allow_html=True
-    )
+    st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600;margin-bottom:30px;'>{left_label}</div>", unsafe_allow_html=True)
 
     input_text = st.text_area(
         " ",
@@ -393,22 +390,16 @@ with col1:
         key="input_text",
         label_visibility="collapsed"
     )
+    st.markdown("<div class='audio-row'>", unsafe_allow_html=True)
+    if st.button("🔊", key="speak_input"):
+        if input_text.strip():
+            tts = gTTS(input_text, lang=src_tts_lang)
+            tts.save("input_tts.mp3")
+            with open("input_tts.mp3", "rb") as f:
+                st.audio(f.read(), format="audio/mp3")  
 
-    # HÀNG CHỨA NÚT 🔊 VÀ 🎤
-    btn_col1, btn_col2 = st.columns([1, 1])
-
-    # 🔊 Nút loa bên trái
-    with btn_col1:
-        if st.button("🔊", key="speak_input"):
-            if input_text.strip():
-                tts = gTTS(input_text, lang=src_tts_lang)
-                tts.save("input_tts.mp3")
-                with open("input_tts.mp3", "rb") as f:
-                    st.audio(f.read(), format="audio/mp3")
-
-    # 🎤 Nút mic bên phải (HTML + JS)
-    with btn_col2:
-        components.html(
+    # NÚT RECORD + STATUS + JS
+    components.html(
 """
 <style>
 #holdToTalk {
@@ -505,7 +496,7 @@ async function stopRecording(e) {
         let raw = await r.text();
         let res = JSON.parse(raw);
 
-        statusBox.innerHTML = "✔"+ res.text;
+        statusBox.innerHTML = "✔"+ res.text;;
         statusBox.style.color = "#009f10";
 
         window.parent.postMessage(
@@ -516,10 +507,9 @@ async function stopRecording(e) {
 }
 </script>
 """,
-        height=95
-        )
-
-    # SCRIPT LẮNG NGHE KẾT QUẢ VOICE → TEXT (giữ nguyên)
+height=95
+)
+    st.markdown("</div>", unsafe_allow_html=True)
     st.components.v1.html(
 """
 <script>
@@ -536,14 +526,12 @@ window.addEventListener('message', (event) => {
 });
 </script>
 """, height=0)
-
     qp = st.experimental_get_query_params()
 
     if "recorded" in qp:
         st.session_state.input_text = qp["recorded"][0]
         st.experimental_set_query_params()  # clear param
         st.experimental_rerun()
-
 
 
 
