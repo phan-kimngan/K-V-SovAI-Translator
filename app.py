@@ -398,6 +398,59 @@ with col1:
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")
 
+    components.html(
+    """
+    <button onclick="startRecording()" 
+    style="width:100%;padding:16px;font-size:18px;border-radius:8px;background:#ff4b4b;color:white;">
+    🎤 Nhấn để nói
+    </button>
+
+    <p id="status" style="font-size:14px;color:#444;"></p>
+
+    <script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+    function startRecording() {
+        document.getElementById("status").innerText = "🎤 Đang ghi âm...";
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+
+            mediaRecorder.ondataavailable = e => {
+                audioChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = e => {
+                document.getElementById("status").innerText = "⏳ Đang xử lý...";
+            
+                const blob = new Blob(audioChunks, {type: 'audio/mp3'});
+                audioChunks = [];
+            
+                let formData = new FormData();
+                formData.append("file", blob, "voice.mp3");
+
+                fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    const textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
+                    textarea.value = data.text;
+                    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+                    document.getElementById("status").innerText = "✔ OK!";
+                });
+            };
+
+            // Stop recording after 5 seconds
+            setTimeout(() => {
+                mediaRecorder.stop();
+            }, 5000);
+        });
+    }
+    </script>
+    """, height=200)
 
 # ==============================
 # 9. RIGHT PANEL
