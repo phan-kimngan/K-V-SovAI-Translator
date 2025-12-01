@@ -452,7 +452,7 @@ async function stopRecording(e) {
 }
 </script>
 """,
-height=30
+height=60
 )
 
 
