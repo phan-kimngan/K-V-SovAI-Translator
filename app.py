@@ -5,12 +5,6 @@ from datetime import datetime
 import requests
 
 
-import streamlit.components.v1 as components
-
-
-
-
-
 API_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie"
 API_vie_to_kor = "https://tenacious-von-occludent.ngrok-free.dev/vie2kor"      
 # ==============================
@@ -404,40 +398,6 @@ with col1:
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")
 
-
-components.html(
-    f"""
-    <script>
-    function startMic_{left_label}(){{
-        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        var recog = new SpeechRecognition();
-        recog.lang = '{'vi-VN' if left_label=='Vietnamese' else 'ko-KR'}';
-        recog.interimResults = false;
-        recog.maxAlternatives = 1;
-        
-        recog.onresult = function(event){{
-            var text = event.results[0][0].transcript;
-            
-            var textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"][aria-label="{left_label}"]');
-            
-            if (!textarea) {{
-                textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
-            }}
-
-            textarea.value = text;
-            textarea.dispatchEvent(new Event('input', {{ bubbles: true }}));
-        }};
-        recog.start();
-    }}
-    </script>
-
-    <button onclick="startMic_{left_label}()" 
-    style="margin-top:6px;width:100%;padding:12px;font-size:20px;border-radius:8px;background:#ff4b4b;color:white;">
-        🎤 Nhấn để nói ({left_label})
-    </button>
-    """,
-    height=80,
-)
 
 # ==============================
 # 9. RIGHT PANEL
