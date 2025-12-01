@@ -406,7 +406,7 @@ with col1:
         border-radius:8px;
         background:#ff4b4b;
         color:white;">
-    🎤 NHẤN & GIỮ ĐỂ NÓI
+    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
 </button>
 <p id="status" style="font-size:14px;color:#444;"></p>
 
@@ -414,91 +414,75 @@ with col1:
 let mediaRecorder;
 let chunks = [];
 let recording = false;
+let startTime = 0;
 
+const MIN_TIME = 400;
 const btn = document.getElementById("holdToTalk");
 const statusBox = document.getElementById("status");
 
-// MOBILE & PC
-btn.onmousedown = startRecording;
-btn.ontouchstart = startRecording;
-btn.onmouseup = stopRecording;
-btn.ontouchend = stopRecording;
-
+// chỉ dùng touchstart + touchend
+btn.addEventListener("touchstart", startRecording);
+btn.addEventListener("touchend", stopRecording);
+// PC
+btn.addEventListener("mousedown", startRecording);
+btn.addEventListener("mouseup", stopRecording);
 
 function startRecording(e) {
     if (recording) return;
     recording = true;
     chunks = [];
+    startTime = Date.now();
     statusBox.innerHTML = "🎙️ Đang ghi âm...";
 
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
         mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.ondataavailable = e => {
-            if (e.data.size > 0) chunks.push(e.data);
-        };
-
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
         mediaRecorder.start();
-    })
-    .catch(err => {
-        statusBox.innerHTML = "❗ Micro bị chặn: " + err;
     });
 }
 
-
 async function stopRecording(e) {
     if (!recording) return;
-    recording = false;
+
+    let dt = Date.now() - startTime;
+    if (dt < MIN_TIME) {
+        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
+        recording = false;
+        return;
+    }
 
     statusBox.innerHTML = "⏳ Đang xử lý...";
-
     mediaRecorder.stop();
+    recording = false;
 
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
 
+        if (blob.size < 2000) {
+            statusBox.innerHTML = "❗ Âm thanh quá ngắn hoặc không thu được!";
+            return;
+        }
+
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
 
-        console.log("====== SEND TO API ======");
-        console.log("Sending:", blob);
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+            method: "POST",
+            body: formData,
+            mode: "cors",
+            headers: {"ngrok-skip-browser-warning": "1" }
+        });
 
-        try {
-            let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
-                method: "POST",
-                body: formData,
-                mode: "cors",
-                headers: {"ngrok-skip-browser-warning": "1" }
-            });
+        let raw = await r.text();
+        let res = JSON.parse(raw);
 
-            console.log("HTTP STATUS:", r.status);
+        statusBox.innerHTML = "✔ OK: " + res.text;
 
-            let raw = await r.text();
-            console.log("RAW RESPONSE:", raw);
-
-            let res = null;
-
-            try {
-                res = JSON.parse(raw);
-            } catch(err) {
-                statusBox.innerHTML = "❗ API không trả JSON!";
-                return;
-            }
-
-            statusBox.innerHTML = "✔ OK: " + res.text;
-
-            window.parent.postMessage(
-                {
-                    isStreamlitMessage: true,
-                    type: "streamlit:setComponentValue",
-                    value: res.text
-                }, "*");
-
-        } catch (err) {
-            console.log("FETCH ERROR:", err);
-            statusBox.innerHTML = "❗ Lỗi fetch: " + err;
-        }
+        window.parent.postMessage(
+            { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
+            "*"
+        );
     }
 }
 </script>
