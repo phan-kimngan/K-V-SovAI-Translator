@@ -492,6 +492,7 @@ async function stopRecording(e) {
             { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
             "*"
         );
+        console.log("POSTMESSAGE SENT")
     }
 }
 </script>
