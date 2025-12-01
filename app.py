@@ -651,7 +651,10 @@ for item in reversed(st.session_state.history):
         """,
         unsafe_allow_html=True
     )
-
+if "_component_value" in st.session_state:
+    st.session_state.input_text = st.session_state._component_value
+    st.session_state._component_value = None
+    st.rerun()
 # 11. FOOTER
 # ==============================
 st.markdown("<hr>", unsafe_allow_html=True)
