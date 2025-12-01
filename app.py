@@ -305,10 +305,7 @@ with col1:
 
 #st.markdown("<div class='swap-container'>", unsafe_allow_html=True)
 st.markdown(f"<div style='align-items: center !important; margin-top: -30px !important; margin-bottom: -30px !important;'>", unsafe_allow_html=True)
-swap_clicked = st.button("⬆️⬇️", key="swap_button")
-st.markdown("</div>", unsafe_allow_html=True)
-
-if swap_clicked:
+if st.button("⬆️⬇️", key="swap_button"):
     st.session_state.mode = "kr_to_vi" if st.session_state.mode == "vi_to_kr" else "vi_to_kr"
 
     old_in = st.session_state.input_text
