@@ -398,7 +398,11 @@ with col1:
     #    height=200,
     #    key="input_text"
     #)
-    
+    voice = st.session_state.get("_component_value")
+    if voice:
+        st.session_state.input_text = voice
+        st.session_state._component_value = None
+    #st.text_area("Input", key="input_text")    
         
     #st.session_state.input_text = input_text
 
@@ -495,11 +499,7 @@ async function stopRecording(e) {
 """,
 height=230
 )  
-    voice = st.session_state.get("_component_value")
-    if voice:
-        st.session_state.input_text = voice
-        st.session_state._component_value = None
-    st.text_area("Input", key="input_text")
+
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
             tts = gTTS(input_text, lang=src_tts_lang)
