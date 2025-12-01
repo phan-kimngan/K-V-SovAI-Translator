@@ -480,7 +480,7 @@ async function stopRecording(e) {
         let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
             method: "POST",
             body: formData,
-            #mode: "cors",
+            mode: "cors",
             headers: {"ngrok-skip-browser-warning": "1" }
         });
 
