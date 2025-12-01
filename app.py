@@ -198,20 +198,7 @@ if "history" not in st.session_state:
 # ==============================
 
 # khoảng cách 2 box trong mobile
-st.markdown(
-    """
-    <style>
-    .swap-container {
-        position: relative;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+
 st.markdown(
     """
     <style>
