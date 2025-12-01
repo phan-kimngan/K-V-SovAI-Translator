@@ -60,8 +60,8 @@ st.markdown("""
     /* nút swap */
     .swap-container button {
         font-size: 28px !important;
-        width: 60px !important;
-        height: 60px !important;
+        width: 80px !important;
+        height: 80px !important;
         border-radius: 50% !important;
         display: flex !important;
         justify-content: center !important;
@@ -155,7 +155,7 @@ st.markdown("""
     /* header gọn hơn một chút */
     h2 {
         margin-top: 10px !important;
-        margin-bottom: 1px !important;
+        margin-bottom: 10px !important;
         font-size: 24px !important;
     }
 
