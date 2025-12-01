@@ -324,11 +324,14 @@ st.markdown("""
 
 </style>
 """, unsafe_allow_html=True)
-
 st.markdown("""
 <style>
+div[data-baseweb="textarea"] {
+    margin-bottom: 0px !important;
+}
+
 div.row-widget.stButton {
-    margin-top: -12px !important;
+    margin-top: -14px !important;
 }
 </style>
 """, unsafe_allow_html=True)
