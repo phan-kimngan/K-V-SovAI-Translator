@@ -314,8 +314,8 @@ with col1:
 <style>
 
 #holdToTalk {
-    width: 36px !important;
-    height: 36px !important;
+    width: 48px !important;
+    height: 48px !important;
     font-size: 18px !important;
     border-radius: 10px !important;
     background: rgba(255,255,255,0.65) !important;
@@ -372,7 +372,7 @@ with col1:
 
 <div style="display:flex; flex-direction:row; align-items:center; gap:8px;">
     <button id="holdToTalk">🎤</button>
-    <p id="status" style="font-size:15px;color:#444;margin-top:4px;"></p>
+    <p id="status" style="font-size:12px;color:#444;margin-top:4px;"></p>
     <button id="copyVoiceBtn">📋</button>
 </div>
 
