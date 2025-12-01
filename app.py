@@ -397,12 +397,12 @@ with col1:
 """
 <button id="holdToTalk"
     style="
-        width:42px;
-        padding:12px;
+        width:100%;
+        padding:16px;
         font-size:18px;
         border-radius:8px;
         background:#ff4b4b;
-        color:black;">
+        color:white;">
     🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
 </button>
 <p id="status" style="font-size:14px;color:#444;"></p>
