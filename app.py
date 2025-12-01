@@ -474,14 +474,9 @@ async function stopRecording(e) {
         statusBox.innerHTML = "✔ OK: " + res.text;
 
         window.parent.postMessage(
-    {
-        isStreamlitMessage: true,
-        type: "streamlit:componentValue",
-        id: "voiceInput",
-        data: res.text
-    },
-    "*"
-);
+            { type: "voice-text", text: res.text },
+            "*"
+        );
 
     }
 }
