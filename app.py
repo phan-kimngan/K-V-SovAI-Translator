@@ -393,105 +393,80 @@ with col1:
     )
 
 
+    # NÚT RECORD + STATUS + JS
     components.html(
 """
 <style>
 #holdToTalk {
-    width: 48px;
-    height: 48px;
-    font-size: 22px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.58);
-    color: #1E1E1E;
-    border: 1px solid rgba(255,255,255,0.8);
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    width:44px;
+    height:44px;
+    font-size:22px;
+    border-radius:12px;
+    background:#fafafa;
+    border: 1px solid rgba(0,0,0,0.12);
     display:flex;
     justify-content:center;
     align-items:center;
     cursor:pointer;
-    transition: 0.12s;
 }
-
-#holdToTalk:hover {
-    background: rgba(255,255,255,0.82);
-    transform: scale(1.07);
-}
-
-/* khi đang ghi âm */
 #holdToTalk.recording {
-    background: rgba(255,80,80,0.9);
+    background:#ff3b30;
     color:white;
-    border:1px solid rgba(255,255,255,1);
     animation: pulse 1s infinite;
 }
-
 @keyframes pulse {
   0% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
-  50% { box-shadow: 0 0 12px rgba(255,20,20,1); }
+  50% { box-shadow: 0 0 14px rgba(255,20,20,1); }
  100% { box-shadow: 0 0 4px rgba(255,80,80,0.3); }
 }
 </style>
 
 <button id="holdToTalk">🎤</button>
-<p id="status" style="font-size:10px;color:#444;margin-top:4px;"></p>
 
 <script>
-let mediaRecorder;
-let chunks = [];
-let recording = false;
-let startTime = 0;
-btn = document.getElementById("holdToTalk");
-statusBox = document.getElementById("status");
+let recorder;
+let audioChunks = [];
+let isRecording = false;
 
-btn.addEventListener("mousedown", startRecording);
-btn.addEventListener("mouseup", stopRecording);
-btn.addEventListener("touchstart", startRecording);
-btn.addEventListener("touchend", stopRecording);
+const btn = document.getElementById("holdToTalk");
 
-function startRecording(e) {
-    if (recording) return;
-    recording = true;
-    chunks = [];
-    startTime = Date.now();
+btn.addEventListener("mousedown", startRec);
+btn.addEventListener("mouseup", stopRec);
+btn.addEventListener("touchstart", startRec);
+btn.addEventListener("touchend", stopRec);
+
+function startRec(e) {
+    if(isRecording) return;
+    isRecording=true;
+    audioChunks=[];
 
     btn.classList.add("recording");
-    statusBox.innerHTML = "🎙️";
-    statusBox.style.color = "#ff3b3b";
 
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.start();
+        recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = e => audioChunks.push(e.data);
+        recorder.start();
     });
 }
 
-async function stopRecording(e) {
-    if (!recording) return;
-    recording = false;
+function stopRec(e) {
+    if(!isRecording) return;
+    isRecording=false;
 
     btn.classList.remove("recording");
-    statusBox.innerHTML = "⏳";
-    statusBox.style.color = "#ffaa00";
-    mediaRecorder.stop();
+    recorder.stop();
 
-    mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
+    recorder.onstop = async () => {
+        const blob = new Blob(audioChunks, { type: 'audio/webm' });
         let formData = new FormData();
         formData.append("file", blob, "voice.webm");
 
-        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
-            method: "POST",
-            body: formData,
-            mode: "cors",
-            headers: {"ngrok-skip-browser-warning": "1" }
-        });
-
-        let raw = await r.text();
-        let res = JSON.parse(raw);
-
-        statusBox.innerHTML = "✔"+ res.text;;
-        statusBox.style.color = "#009f10";
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", { method: "POST", body: formData });
+        let res = await r.json();
 
         window.parent.postMessage(
             { type: "voice-text", text: res.text },
@@ -501,7 +476,7 @@ async function stopRecording(e) {
 }
 </script>
 """,
-height=95
+height=0   # <<======== cực quan trọng
 )
 
     st.components.v1.html(
