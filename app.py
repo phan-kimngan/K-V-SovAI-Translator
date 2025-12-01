@@ -391,9 +391,9 @@ with col1:
         key="input_text",
         label_visibility="collapsed"
     )
-
-
-    components.html(
+    subcol1, subcol2 = st.columns(3,1)
+    subcol2: 
+        components.html(
 """
 <button id="holdToTalk"
     style="
@@ -505,12 +505,13 @@ window.addEventListener('message', (event) => {
         st.session_state.input_text = qp["recorded"][0]
         st.experimental_set_query_params()  # clear param
         st.experimental_rerun()
-    if st.button("🔊", key="speak_input"):
-        if input_text.strip():
-            tts = gTTS(input_text, lang=src_tts_lang)
-            tts.save("input_tts.mp3")
-            with open("input_tts.mp3", "rb") as f:
-                st.audio(f.read(), format="audio/mp3")  
+    subcol1: 
+        if st.button("🔊", key="speak_input"):
+            if input_text.strip():
+                tts = gTTS(input_text, lang=src_tts_lang)
+                tts.save("input_tts.mp3")
+                with open("input_tts.mp3", "rb") as f:
+                    st.audio(f.read(), format="audio/mp3")  
 
 
 
