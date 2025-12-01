@@ -148,8 +148,8 @@ st.markdown("""
     .block-container {
         padding-left: 1px !important;
         padding-right: 1px !important;
-        padding-top: 10px !important;
-        padding-bottom: 50px !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
     }
 
     /* header gọn hơn một chút */
