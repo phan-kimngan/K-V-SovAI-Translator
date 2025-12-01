@@ -428,6 +428,7 @@ with col1:
     align-items:center;
     margin: 0 !important;
     padding: 0 !important;
+    margin-left: -6px !important;
 }
 
 #holdToTalk:hover {
