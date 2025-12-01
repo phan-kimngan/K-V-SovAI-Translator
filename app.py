@@ -276,24 +276,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# khoảng cách 2 box trong mobile
-st.markdown(
-    """
-    <style>
-    .swap-container {
-        position: relative;
-        height: 10px !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: -60px !important;
-        margin-bottom: -8px !important;
-        padding: 0 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 st.markdown("""
 <style>
 
