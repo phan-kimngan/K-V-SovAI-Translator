@@ -71,7 +71,7 @@ st.markdown("""
 
     /* ===== giảm khoảng trắng extra giữa các phần tử ===== */
     .block-container {
-        gap: 4px !important;
+        gap: 1px !important;
     }
 
     div[data-testid="stVerticalBlock"]{
@@ -146,10 +146,10 @@ st.markdown("""
 
     /* thu gọn padding của container chính */
     .block-container {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        padding-top: 8px !important;
-        padding-bottom: 20px !important;
+        padding-left: 1px !important;
+        padding-right: 1px !important;
+        padding-top: 10px !important;
+        padding-bottom: 50px !important;
     }
 
     /* header gọn hơn một chút */
