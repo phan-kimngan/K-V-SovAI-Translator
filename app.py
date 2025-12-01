@@ -154,8 +154,8 @@ st.markdown("""
 
     /* header gọn hơn một chút */
     h2 {
-        margin-top: 10px !important;
-        margin-bottom: 10px !important;
+        margin-top: 30px !important;
+        margin-bottom: 30px !important;
         font-size: 24px !important;
     }
 
@@ -198,7 +198,20 @@ if "history" not in st.session_state:
 # ==============================
 
 # khoảng cách 2 box trong mobile
-
+st.markdown(
+    """
+    <style>
+    .swap-container {
+        position: relative;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 st.markdown(
     """
     <style>
