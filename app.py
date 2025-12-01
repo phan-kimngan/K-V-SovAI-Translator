@@ -154,7 +154,7 @@ st.markdown("""
 
     /* header gọn hơn một chút */
     h2 {
-        margin-top: 1px !important;
+        margin-top: 10px !important;
         margin-bottom: 1px !important;
         font-size: 24px !important;
     }
