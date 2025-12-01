@@ -9,8 +9,26 @@ def translate_kor_to_vie(text):
     return text
 def translate_vie_to_kor(text):
     return text
-    
-       
+import speech_recognition as sr    
+# ==============================
+# VOICE INPUT
+# ==============================
+def record_and_transcribe(language="vi"):
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        st.info("🎙️ Đang nghe... nói đi nhé...")
+        audio = r.listen(source)
+
+    try:
+        st.success("⏳ Đang xử lý giọng nói...")
+        text = r.recognize_google(audio, language=language)
+        return text
+    except sr.UnknownValueError:
+        st.error("❗Không hiểu âm thanh")
+        return ""
+    except sr.RequestError:
+        st.error("❗Không kết nối được dịch vụ nhận dạng")
+        return ""       
 # ==============================
 # 1. PAGE CONFIG
 # ==============================
@@ -190,7 +208,8 @@ if "mode" not in st.session_state:
 
 if "input_text" not in st.session_state:
     st.session_state.input_text = ""
-
+if "update_trigger" not in st.session_state:
+    st.session_state.update_trigger = 0
 if "translation" not in st.session_state:
     st.session_state.translation = ""
 
@@ -357,6 +376,8 @@ if swap_clicked:
 
     st.session_state.input_text = old_out
     st.session_state.translation = old_in
+    st.session_state.update_trigger += 1
+    st.rerun()
 
 # ==============================
 # 7. LABEL CONFIG
@@ -381,25 +402,35 @@ else:
 with col1:
     st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600;'>{left_label}</div>", unsafe_allow_html=True)
 
-    if "temp_voice_text" in st.session_state and st.session_state.temp_voice_text:
-        default_text = st.session_state.temp_voice_text
-        st.session_state.temp_voice_text = ""   # reset
-    else:
-        default_text = st.session_state.input_text
-
     input_text = st.text_area(
         "",
-        key="input_text",
+        st.session_state.input_text,
         height=200,
-        value=default_text
+        key=f"input_widget_{st.session_state.update_trigger}"
     )
 
-    if st.button("🔊", key="speak_input"):
-        if input_text.strip():
-            tts = gTTS(input_text, lang=src_tts_lang)
-            tts.save("input_tts.mp3")
-            with open("input_tts.mp3", "rb") as f:
-                st.audio(f.read(), format="audio/mp3")
+    st.session_state.input_text = input_text
+
+    colA, colB = st.columns([3, 1])
+
+    with colA:
+        if st.button("🔊", key="speak_input"):
+            if input_text.strip():
+                tts = gTTS(input_text, lang=src_tts_lang)
+                tts.save("input_tts.mp3")
+                with open("input_tts.mp3", "rb") as f:
+                    st.audio(f.read(), format="audio/mp3")
+
+    with colB:
+        if st.button("🎤", key="voice_input"):
+            text = record_and_transcribe(language=src_tts_lang)
+            if text.strip():
+                st.session_state.input_text = text
+                st.session_state.update_trigger += 1
+                st.success("✔ Đã nhận dạng giọng nói")
+                st.rerun()
+            else:
+                st.warning("⚠️ Không nhận diện được giọng nói")
 
 # ==============================
 # 9. RIGHT PANEL
