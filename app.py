@@ -4,7 +4,12 @@ import pandas as pd
 from datetime import datetime
 import requests
 import streamlit.components.v1 as components
+import streamlit.components.v1 as components
 
+voice_recorder = components.declare_component(
+    "voice_recorder",
+    path="voice_recorder"  # trùng tên thư mục vừa tạo
+)
 
 
 API_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie"
@@ -381,122 +386,26 @@ else:
 # 8. LEFT PANEL
 # ==============================
 with col1:
-    st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600;'>{left_label}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div style='color: #000000;font-size:20px; font-weight:600;'>{left_label}</div>",
+        unsafe_allow_html=True
+    )
 
+    # 1) GỌI COMPONENT VOICE RECORDER
+    recorded_text = voice_recorder(key="voice_recorder")
+
+    # 2) NẾU CÓ KẾT QUẢ MỚI → CẬP NHẬT SESSION & INPUT BOX
+    if recorded_text is not None and recorded_text != "":
+        st.session_state.input_text = recorded_text
+
+    # 3) TEXTBOX BÊN TRÁI LUÔN ĐỌC TỪ session_state.input_text
     input_text = st.text_area(
         " ",
         st.session_state.input_text,
         height=200,
         key="input_text",
-    label_visibility="collapsed"
+        label_visibility="collapsed"
     )
-    components.html(
-"""
-<button id="holdToTalk"
-    style="
-        width:100%;
-        padding:16px;
-        font-size:18px;
-        border-radius:8px;
-        background:#ff4b4b;
-        color:white;">
-    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
-</button>
-<p id="status" style="font-size:14px;color:#444;"></p>
-
-<script>
-let mediaRecorder;
-let chunks = [];
-let recording = false;
-let startTime = 0;
-
-const MIN_TIME = 400;
-const btn = document.getElementById("holdToTalk");
-const statusBox = document.getElementById("status");
-
-// chỉ dùng touchstart + touchend
-btn.addEventListener("touchstart", startRecording);
-btn.addEventListener("touchend", stopRecording);
-// PC
-btn.addEventListener("mousedown", startRecording);
-btn.addEventListener("mouseup", stopRecording);
-
-function startRecording(e) {
-    if (recording) return;
-    recording = true;
-    chunks = [];
-    startTime = Date.now();
-    statusBox.innerHTML = "🎙️ Đang ghi âm...";
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.start();
-    });
-}
-
-async function stopRecording(e) {
-    if (!recording) return;
-
-    let dt = Date.now() - startTime;
-    if (dt < MIN_TIME) {
-        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
-        recording = false;
-        return;
-    }
-
-    statusBox.innerHTML = "⏳ Đang xử lý...";
-    mediaRecorder.stop();
-    recording = false;
-
-    mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-
-        if (blob.size < 2000) {
-            statusBox.innerHTML = "❗ Âm thanh quá ngắn hoặc không thu được!";
-            return;
-        }
-
-        let formData = new FormData();
-        formData.append("file", blob, "voice.webm");
-
-        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
-            method: "POST",
-            body: formData,
-            mode: "cors",
-            headers: {"ngrok-skip-browser-warning": "1" }
-        });
-
-        let raw = await r.text();
-        let res = JSON.parse(raw);
-
-        statusBox.innerHTML = "✔ OK: " + res.text;
-
-        window.parent.postMessage(
-    {
-        isStreamlitMessage: true,
-        type: "streamlit:componentValue",
-        id: "voiceInput",
-        data: res.text
-    },
-    "*"
-);
-
-    }
-}
-</script>
-""",
-height=230
-)
-    # Nếu có dữ liệu mới từ JS component
-    st.write(st.session_state)
-    if "voiceInput" in st.session_state and st.session_state.voiceInput:
-        st.session_state.input_text = st.session_state.voiceInput
-        st.session_state.voiceInput = ""  # reset tránh lặp lại
-        st.rerun()
-   
-
 
     if st.button("🔊", key="speak_input"):
         if input_text.strip():
@@ -504,6 +413,7 @@ height=230
             tts.save("input_tts.mp3")
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")
+   
 
 
 
