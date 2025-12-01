@@ -3,6 +3,49 @@ from gtts import gTTS
 import pandas as pd
 from datetime import datetime
 import requests
+
+
+import streamlit.components.v1 as components
+
+# MICRO BUTTON
+components.html(
+"""
+<button onclick="startRecognition()" style="
+    width:100%;
+    padding:15px;
+    font-size:20px;
+    border-radius:10px;
+    border:none;
+    background:#ff4b4b;
+    color:white;
+    margin-bottom:10px;">
+🎤 Nhấn để nói
+</button>
+
+<script>
+function startRecognition() {
+    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'ko-KR'; 
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        var text = event.results[0][0].transcript;
+        window.parent.postMessage({ type: 'speechResult', text: text }, '*');
+    }
+}
+</script>
+""",
+height=80,
+)
+
+# LẮNG NGHE KẾT QUẢ GIỌNG NÓI, ĐẨY VÀO TEXTBOX
+speech = st.experimental_get_query_params().get("speechResult", [""])[0]
+if speech:
+    st.session_state.input_text = speech
+
+
 API_kor_to_vie = "https://tenacious-von-occludent.ngrok-free.dev/kor2vie"
 API_vie_to_kor = "https://tenacious-von-occludent.ngrok-free.dev/vie2kor"      
 # ==============================
