@@ -392,10 +392,8 @@ with col1:
         label_visibility="collapsed"
     )
 
-    left_col1, left_col2 = st.columns([3, 1])
 
-    with left_col2:
-        components.html(
+    components.html(
 """
 <button id="holdToTalk"
     style="
@@ -485,19 +483,34 @@ async function stopRecording(e) {
 """,
 height=230
 )
-        qp = st.experimental_get_query_params()
+    st.components.v1.html(
+"""
+<script>
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'voice-text') {
+        const text = event.data.text;
 
-        if "recorded" in qp:
-                st.session_state.input_text = qp["recorded"][0]
-                st.experimental_set_query_params()  # clear param
-                st.rerun()
-    with left_col1:
-        if st.button("🔊", key="speak_input"):
-            if input_text.strip():
-                tts = gTTS(input_text, lang=src_tts_lang)
-                tts.save("input_tts.mp3")
-                with open("input_tts.mp3", "rb") as f:
-                    st.audio(f.read(), format="audio/mp3")  
+        window.parent.postMessage({
+            isStreamlitMessage: true,
+            type: "streamlit:setQueryParams",
+            queryParams: { recorded:[text] }
+        }, "*");
+    }
+});
+</script>
+""", height=0)
+    qp = st.experimental_get_query_params()
+
+    if "recorded" in qp:
+        st.session_state.input_text = qp["recorded"][0]
+        st.experimental_set_query_params()  # clear param
+        st.experimental_rerun()
+    if st.button("🔊", key="speak_input"):
+        if input_text.strip():
+            tts = gTTS(input_text, lang=src_tts_lang)
+            tts.save("input_tts.mp3")
+            with open("input_tts.mp3", "rb") as f:
+                st.audio(f.read(), format="audio/mp3")  
 
 
 
