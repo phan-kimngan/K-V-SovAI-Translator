@@ -393,11 +393,12 @@ with col1:
     )
     subcol1, subcol2 = st.columns(3,1)
     with subcol2: 
-        components.html(
+    components.html(
 """
 <button id="holdToTalk"
     style="
-        width:42px;
+        width: 44px;
+        height: 44px;
         padding:16px;
         font-size:12px;
         border-radius:8px;
