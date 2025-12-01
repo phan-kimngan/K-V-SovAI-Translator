@@ -395,7 +395,7 @@ with col1:
     #    st.session_state.input_text = st.session_state._component_value
     #    st.session_state._component_value = None
     #    #st.session_state.update_trigger += 1
-    voice_text = components.declare_component("voice_text", path="") 
+    val = components.declare_component("voice_text", path="") 
     if val:
         st.session_state.input_text = val    
     st.text_area(
