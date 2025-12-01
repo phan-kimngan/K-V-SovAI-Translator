@@ -384,19 +384,20 @@ with col1:
     st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600;'>{left_label}</div>", unsafe_allow_html=True)
 
     input_text = st.text_area(
-        "",
+        " ",
         st.session_state.input_text,
         height=200,
-        key=f"input_widget_{st.session_state.update_trigger}"
+        key="input_text",
+    label_visibility="collapsed"
     )
-    st.session_state.input_text = input_text
-    
-    voice = st.session_state.get("_component_value")
-    if voice:
-        st.session_state.input_text = voice
-        st.session_state._component_value = None
 
-
+    components.html("""
+    <script>
+    window.getInputBox = function() {
+        return window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
+    }
+    </script>
+    """, height=0)
     components.html(
 """
 <button id="holdToTalk"
@@ -480,10 +481,15 @@ async function stopRecording(e) {
 
         statusBox.innerHTML = "✔ OK: " + res.text;
 
-        window.parent.postMessage(
-            { isStreamlitMessage: true, type: "streamlit:setComponentValue", value: res.text },
-            "*"
-        );
+        setTimeout(() => {
+    const box = window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
+    if (box) {
+        box.value = res.text;
+        box.dispatchEvent(new Event('input', { bubbles: true }));
+    } else {
+        console.log("❗ Không tìm thấy textarea");
+    }
+}, 200);
     }
 }
 </script>
