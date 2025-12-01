@@ -468,8 +468,8 @@ async function stopRecording(e) {
             let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
                 method: "POST",
                 body: formData,
-                mode: "cors"
-                headers: {"ngrok-skip-browser-warning": "1"  }
+                mode: "cors",
+                headers: {"ngrok-skip-browser-warning": "1" }
             });
 
             console.log("HTTP STATUS:", r.status);
@@ -481,7 +481,7 @@ async function stopRecording(e) {
 
             try {
                 res = JSON.parse(raw);
-            } catch {
+            } catch(err) {
                 statusBox.innerHTML = "❗ API không trả JSON!";
                 return;
             }
@@ -505,6 +505,7 @@ async function stopRecording(e) {
 """,
 height=230
 )
+
 
 
 
