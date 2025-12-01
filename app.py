@@ -314,8 +314,8 @@ with col1:
 <style>
 
 #holdToTalk {
-    width: 48px !important;
-    height: 48px !important;
+    width: 32px !important;
+    height: 32px !important;
     font-size: 18px !important;
     border-radius: 10px !important;
     background: rgba(255,255,255,0.65) !important;
@@ -326,7 +326,7 @@ with col1:
     align-items:center !important;
     padding: 0 !important;
     margin: 0 !important;
-    margin-left: -4px !important;
+    margin-left: -6px !important;
     box-shadow: 0 3px 6px rgba(0,0,0,0.13) !important;
     flex: 0 0 auto !important;
 }
@@ -349,11 +349,10 @@ with col1:
 #status {
     flex: 1 1 auto !important;
     max-width: 100% !important;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    overflow: visible !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
 }
-
 
 /* khi đang ghi âm */
 #holdToTalk.recording {
