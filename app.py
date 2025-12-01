@@ -286,7 +286,7 @@ st.markdown(
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: -12px !important;
+        margin-top: -60px !important;
         margin-bottom: -8px !important;
         padding: 0 !important;
     }
