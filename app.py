@@ -199,43 +199,7 @@ if "translation" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# MICRO BUTTON
-components.html(
-"""
-<button onclick="startRecognition()" style="
-    width:100%;
-    padding:15px;
-    font-size:20px;
-    border-radius:10px;
-    border:none;
-    background:#ff4b4b;
-    color:white;
-    margin-bottom:10px;">
-🎤 Nhấn để nói
-</button>
 
-<script>
-function startRecognition() {
-    var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'ko-KR'; 
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.start();
-
-    recognition.onresult = function(event) {
-        var text = event.results[0][0].transcript;
-        window.parent.postMessage({ type: 'speechResult', text: text }, '*');
-    }
-}
-</script>
-""",
-height=80,
-)
-
-# LẮNG NGHE KẾT QUẢ GIỌNG NÓI, ĐẨY VÀO TEXTBOX
-speech = st.experimental_get_query_params().get("speechResult", [""])[0]
-if speech:
-    st.session_state.input_text = speech
 # ==============================
 # 3. CSS
 # ==============================
@@ -439,6 +403,41 @@ with col1:
             tts.save("input_tts.mp3")
             with open("input_tts.mp3", "rb") as f:
                 st.audio(f.read(), format="audio/mp3")
+
+
+components.html(
+    f"""
+    <script>
+    function startMic_{left_label}(){{
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        var recog = new SpeechRecognition();
+        recog.lang = '{'vi-VN' if left_label=='Vietnamese' else 'ko-KR'}';
+        recog.interimResults = false;
+        recog.maxAlternatives = 1;
+        
+        recog.onresult = function(event){{
+            var text = event.results[0][0].transcript;
+            
+            var textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"][aria-label="{left_label}"]');
+            
+            if (!textarea) {{
+                textarea = window.parent.document.querySelector('textarea[data-testid="stTextArea"]');
+            }}
+
+            textarea.value = text;
+            textarea.dispatchEvent(new Event('input', {{ bubbles: true }}));
+        }};
+        recog.start();
+    }}
+    </script>
+
+    <button onclick="startMic_{left_label}()" 
+    style="margin-top:6px;width:100%;padding:12px;font-size:20px;border-radius:8px;background:#ff4b4b;color:white;">
+        🎤 Nhấn để nói ({left_label})
+    </button>
+    """,
+    height=80,
+)
 
 # ==============================
 # 9. RIGHT PANEL
