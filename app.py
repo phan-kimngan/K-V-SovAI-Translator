@@ -6,7 +6,6 @@ import requests
 import streamlit.components.v1 as components
 from streamlit_webrtc import webrtc_streamer, AudioProcessorBase
 import av
-import numpy as np
 import io
 class AudioProcessor(AudioProcessorBase):
     def __init__(self):
