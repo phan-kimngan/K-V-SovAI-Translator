@@ -485,7 +485,7 @@ async function stopRecording(e) {
 """,
 height=230
 )
-    st.components.v1.html(
+        st.components.v1.html(
 """
 <script>
 window.addEventListener('message', (event) => {
@@ -501,12 +501,12 @@ window.addEventListener('message', (event) => {
 });
 </script>
 """, height=0)
-    qp = st.experimental_get_query_params()
+        qp = st.experimental_get_query_params()
 
-    if "recorded" in qp:
-        st.session_state.input_text = qp["recorded"][0]
-        st.experimental_set_query_params()  # clear param
-        st.rerun()
+        if "recorded" in qp:
+                st.session_state.input_text = qp["recorded"][0]
+                st.experimental_set_query_params()  # clear param
+                st.rerun()
     with left_col2:
         if st.button("🔊", key="speak_input"):
             if input_text.strip():
