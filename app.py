@@ -382,7 +382,7 @@ else:
 # 8. LEFT PANEL
 # ==============================
 with col1:
-    st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600; margin-bottom:30px'>{left_label}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='color: #000000;font-size:20px; font-weight:600; margin-bottom:25px'>{left_label}</div>", unsafe_allow_html=True)
 
     input_text = st.text_area(
         " ",
