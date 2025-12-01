@@ -390,7 +390,108 @@ with col1:
         key="input_text",
     label_visibility="collapsed"
     )
+    value = components.html(
+"""
+<button id="holdToTalk"
+    style="
+        width:100%;
+        padding:16px;
+        font-size:18px;
+        border-radius:8px;
+        background:#ff4b4b;
+        color:white;">
+    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
+</button>
+<p id="status" style="font-size:14px;color:#444;"></p>
 
+<script>
+let mediaRecorder;
+let chunks = [];
+let recording = false;
+let startTime = 0;
+
+const MIN_TIME = 400;
+const btn = document.getElementById("holdToTalk");
+const statusBox = document.getElementById("status");
+
+// chỉ dùng touchstart + touchend
+btn.addEventListener("touchstart", startRecording);
+btn.addEventListener("touchend", stopRecording);
+// PC
+btn.addEventListener("mousedown", startRecording);
+btn.addEventListener("mouseup", stopRecording);
+
+function startRecording(e) {
+    if (recording) return;
+    recording = true;
+    chunks = [];
+    startTime = Date.now();
+    statusBox.innerHTML = "🎙️ Đang ghi âm...";
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.start();
+    });
+}
+
+async function stopRecording(e) {
+    if (!recording) return;
+
+    let dt = Date.now() - startTime;
+    if (dt < MIN_TIME) {
+        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
+        recording = false;
+        return;
+    }
+
+    statusBox.innerHTML = "⏳ Đang xử lý...";
+    mediaRecorder.stop();
+    recording = false;
+
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+
+        if (blob.size < 2000) {
+            statusBox.innerHTML = "❗ Âm thanh quá ngắn hoặc không thu được!";
+            return;
+        }
+
+        let formData = new FormData();
+        formData.append("file", blob, "voice.webm");
+
+        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+            method: "POST",
+            body: formData,
+            mode: "cors",
+            headers: {"ngrok-skip-browser-warning": "1" }
+        });
+
+        let raw = await r.text();
+        let res = JSON.parse(raw);
+
+        statusBox.innerHTML = "✔ OK: " + res.text;
+
+        window.parent.postMessage(
+    {
+        isStreamlitMessage: true,
+        type: "streamlit:componentValue",
+        id: "voiceInput",
+        data: res.text
+    },
+    "*"
+);
+
+    }
+}
+</script>
+""",
+height=230
+)
+    if value:
+        st.session_state.input_text = value
+        st.rerun()
    
 
 
@@ -547,109 +648,8 @@ for item in reversed(st.session_state.history):
         unsafe_allow_html=True
     )
 
-value = components.html(
-"""
-<button id="holdToTalk"
-    style="
-        width:100%;
-        padding:16px;
-        font-size:18px;
-        border-radius:8px;
-        background:#ff4b4b;
-        color:white;">
-    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
-</button>
-<p id="status" style="font-size:14px;color:#444;"></p>
 
-<script>
-let mediaRecorder;
-let chunks = [];
-let recording = false;
-let startTime = 0;
 
-const MIN_TIME = 400;
-const btn = document.getElementById("holdToTalk");
-const statusBox = document.getElementById("status");
-
-// EVENT FOR PHONE
-btn.addEventListener("touchstart", startRecording);
-btn.addEventListener("touchend", stopRecording);
-
-// EVENT FOR PC
-btn.addEventListener("mousedown", startRecording);
-btn.addEventListener("mouseup", stopRecording);
-
-function startRecording(e) {
-    if (recording) return;
-    recording = true;
-    chunks = [];
-    startTime = Date.now();
-    statusBox.innerHTML = "🎙️ Đang ghi âm...";
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.start();
-    });
-}
-
-async function stopRecording(e) {
-    if (!recording) return;
-
-    let dt = Date.now() - startTime;
-    if (dt < MIN_TIME) {
-        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
-        recording = false;
-        return;
-    }
-
-    statusBox.innerHTML = "⏳ Đang xử lý...";
-    mediaRecorder.stop();
-    recording = false;
-
-    mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' });
-
-        if (blob.size < 2000) {
-            statusBox.innerHTML = "❗ Âm thanh quá ngắn hoặc không thu được!";
-            return;
-        }
-
-        let formData = new FormData();
-        formData.append("file", blob, "voice.webm");
-
-        let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
-            method: "POST",
-            body: formData,
-            mode: "cors",
-            headers: {"ngrok-skip-browser-warning": "1" }
-        });
-
-        let raw = await r.text();
-        let res = JSON.parse(raw);
-
-        statusBox.innerHTML = "✔ OK: " + res.text;
-
-        window.parent.postMessage(
-            {
-                isStreamlitMessage: true,
-                type: "streamlit:componentValue",
-                id: "voiceInput",
-                data: res.text
-            },
-            "*"
-        );
-    }
-}
-</script>
-""",
-height=230
-)
-
-if value:
-    st.session_state.input_text = value
-    st.rerun()
 
 # 11. FOOTER
 # ==============================
