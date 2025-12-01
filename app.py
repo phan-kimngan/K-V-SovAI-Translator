@@ -194,11 +194,9 @@ if "history" not in st.session_state:
     st.session_state.history = []
 
 # ADD — Voice listener handler
-def check_voice_message():
-    params = st.experimental_get_query_params()
-    if "speech" in params:
-        st.session_state.input_text = params["speech"][0]
-check_voice_message()
+params = st.experimental_get_query_params()
+if "speech" in params:
+    st.session_state.input_text = params["speech"][0]
 # ==============================
 # 3. CSS
 # ==============================
@@ -426,30 +424,39 @@ with col1:
                 audioChunks.push(e.data);
             };
 
-            mediaRecorder.onstop = e => {
+            mediaRecorder.onstop = async (e) => {
                 document.getElementById("status").innerText = "⏳ Đang xử lý...";
             
-                const blob = new Blob(audioChunks, {type: 'audio/mp3'});
+                const blob = new Blob(audioChunks, {type: 'audio/webm'});
                 audioChunks = [];
             
                 let formData = new FormData();
-                formData.append("file", blob, "voice.mp3");
+                formData.append("file", blob, "voice.webm");
 
-                fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
+                let r = await fetch("https://tenacious-von-occludent.ngrok-free.dev/voice2text", {
                     method: "POST",
                     body: formData
-                })
-                .then(r => r.json())
-                .then(data => {
+                });
+
+                let responseText = await r.text();  
+                console.log("SERVER RAW:", responseText);
+
+                try {
+                    let data = JSON.parse(responseText);
+
+                    // >>> PHẦN CHỈNH QUAN TRỌNG NHẤT <<<
                     window.parent.postMessage(
-                        { type: "STT_RESULT", text: data.text },
+                        { type: "speech", speech: data.text },
                         "*"
                     );
+                    // >>> END FIX <<<
+
                     document.getElementById("status").innerText = "✔ OK!";
-                });
+                } catch {
+                    document.getElementById("status").innerText = "❗ Lỗi server";
+                }
             };
 
-            // Stop recording after 5 seconds
             setTimeout(() => {
                 mediaRecorder.stop();
             }, 5000);
@@ -457,6 +464,7 @@ with col1:
     }
     </script>
     """, height=200)
+
 
 # ==============================
 # 9. RIGHT PANEL
