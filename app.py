@@ -392,34 +392,20 @@ with col1:
         label_visibility="collapsed"
     )
 
-    subcol1, subcol2 = st.columns([3,1])
 
-    with subcol2: 
-        components.html(
+    components.html(
 """
-<style>
-#holdToTalk {
-    width: 46px;
-    height: 46px;
-    font-size:20px;
-    border-radius:50%;
-    background:#ff4b4b;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    border:none;
-    box-shadow:0 3px 6px rgba(0,0,0,0.25);
-    transition: 0.15s;
-}
-#holdToTalk:active {
-    transform: scale(1.13);
-}
-</style>
-
-<button id="holdToTalk">🎤</button>
-<p id="status" style="font-size:10px;color:#444;margin-top:4px;"></p>
+<button id="holdToTalk"
+    style="
+        width:100%;
+        padding:16px;
+        font-size:18px;
+        border-radius:8px;
+        background:#ff4b4b;
+        color:white;">
+    🎤 NHẤN & NHẤC TAY RA ĐỂ KẾT THÚC
+</button>
+<p id="status" style="font-size:14px;color:#444;"></p>
 
 <script>
 let mediaRecorder;
@@ -427,11 +413,14 @@ let chunks = [];
 let recording = false;
 let startTime = 0;
 
-btn = document.getElementById("holdToTalk");
-statusBox = document.getElementById("status");
+const MIN_TIME = 400;
+const btn = document.getElementById("holdToTalk");
+const statusBox = document.getElementById("status");
 
+// chỉ dùng touchstart + touchend
 btn.addEventListener("touchstart", startRecording);
 btn.addEventListener("touchend", stopRecording);
+// PC
 btn.addEventListener("mousedown", startRecording);
 btn.addEventListener("mouseup", stopRecording);
 
@@ -440,7 +429,7 @@ function startRecording(e) {
     recording = true;
     chunks = [];
     startTime = Date.now();
-    statusBox.innerHTML = "🎙️";
+    statusBox.innerHTML = "🎙️ Đang ghi âm...";
 
     navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
@@ -452,10 +441,17 @@ function startRecording(e) {
 
 async function stopRecording(e) {
     if (!recording) return;
-    recording = false;
 
-    statusBox.innerHTML = "⏳";
+    let dt = Date.now() - startTime;
+    if (dt < MIN_TIME) {
+        statusBox.innerHTML = "❗ Bạn phải NHẤN & GIỮ > 0.4s để nói!";
+        recording = false;
+        return;
+    }
+
+    statusBox.innerHTML = "⏳ Đang xử lý...";
     mediaRecorder.stop();
+    recording = false;
 
     mediaRecorder.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
@@ -470,27 +466,30 @@ async function stopRecording(e) {
             headers: {"ngrok-skip-browser-warning": "1" }
         });
 
-        let res = await r.json();
+        let raw = await r.text();
+        let res = JSON.parse(raw);
 
-        statusBox.innerHTML = "✔";
-        // gửi text về python
+        statusBox.innerHTML = "✔ OK: " + res.text;
+
+        // gửi text về python session_state
         window.parent.postMessage(
             { type: "voice-text", text: res.text },
             "*"
         );
+
     }
 }
 </script>
 """,
-height=90
+height=230
 )
-
-        st.components.v1.html(
+    st.components.v1.html(
 """
 <script>
 window.addEventListener('message', (event) => {
     if (event.data.type === 'voice-text') {
         const text = event.data.text;
+
         window.parent.postMessage({
             isStreamlitMessage: true,
             type: "streamlit:setQueryParams",
@@ -500,21 +499,41 @@ window.addEventListener('message', (event) => {
 });
 </script>
 """, height=0)
+    qp = st.experimental_get_query_params()
 
-        qp = st.experimental_get_query_params()
-        if "recorded" in qp:
-            st.session_state.input_text = qp["recorded"][0]
-            st.experimental_set_query_params()
-            st.experimental_rerun()
+    if "recorded" in qp:
+        st.session_state.input_text = qp["recorded"][0]
+        st.experimental_set_query_params()  # clear param
+        st.experimental_rerun()
+    if st.button("🔊", key="speak_input"):
+        if input_text.strip():
+            tts = gTTS(input_text, lang=src_tts_lang)
+            tts.save("input_tts.mp3")
+            with open("input_tts.mp3", "rb") as f:
+                st.audio(f.read(), format="audio/mp3")  
 
-    with subcol1: 
-        if st.button("🔊", key="speak_input"):
-            if input_text.strip():
-                tts = gTTS(input_text, lang=src_tts_lang)
-                tts.save("input_tts.mp3")
-                with open("input_tts.mp3", "rb") as f:
-                    st.audio(f.read(), format="audio/mp3")
 
+
+
+# ==============================
+# 9. RIGHT PANEL
+# ==============================
+with col2:
+    st.markdown(f"<div style='color: #000000; font-size:20px; font-weight:600;'>{right_label}</div>", unsafe_allow_html=True)
+
+    st.text_area(
+        " ",
+        st.session_state.translation,
+        height=200,
+        key="output_box"
+    )
+
+    if st.button("🔊", key="speak_output"):
+        if st.session_state.translation.strip():
+            tts = gTTS(st.session_state.translation, lang=tgt_tts_lang)
+            tts.save("output_tts.mp3")
+            with open("output_tts.mp3", "rb") as f:
+                st.audio(f.read(), format="audio/mp3")
 
 # ==============================
 # 10. TRANSLATE
